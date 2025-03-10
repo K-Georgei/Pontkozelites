@@ -15,11 +15,19 @@ namespace Kozelites
         public float X { get; set; }
         public float Y { get; set; }
 
-        public Pont2D(string name="p1", float x = 0, float y = 0)
+        private int i = 0;
+
+        public Pont2D(float x = 0, float y = 0)
         {
-            Name = name;    
+            Name = $"p{namehelper()}";    
             X = x;
             Y = y;
+        }
+
+        private int namehelper()
+        {
+            i++;
+            return i;
         }
 
 

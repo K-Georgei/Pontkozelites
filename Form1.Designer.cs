@@ -31,20 +31,22 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             dataGridView1 = new DataGridView();
             tableLayoutPanel2 = new TableLayoutPanel();
+            btn_addPont = new Button();
             flowLayoutPanel2 = new FlowLayoutPanel();
             label2 = new Label();
-            textBox3 = new TextBox();
-            button1 = new Button();
-            button2 = new Button();
+            yInput = new NumericUpDown();
             flowLayoutPanel1 = new FlowLayoutPanel();
             label1 = new Label();
-            textBox1 = new TextBox();
+            xInput = new NumericUpDown();
+            btn_removePont = new Button();
             pictureBox1 = new PictureBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tableLayoutPanel2.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)yInput).BeginInit();
             flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)xInput).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -80,10 +82,10 @@
             tableLayoutPanel2.ColumnCount = 2;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.Controls.Add(btn_addPont, 0, 0);
             tableLayoutPanel2.Controls.Add(flowLayoutPanel2, 1, 1);
-            tableLayoutPanel2.Controls.Add(button1, 0, 0);
-            tableLayoutPanel2.Controls.Add(button2, 1, 0);
             tableLayoutPanel2.Controls.Add(flowLayoutPanel1, 0, 1);
+            tableLayoutPanel2.Controls.Add(btn_removePont, 1, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(3, 398);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -93,10 +95,21 @@
             tableLayoutPanel2.Size = new Size(337, 88);
             tableLayoutPanel2.TabIndex = 1;
             // 
+            // btn_addPont
+            // 
+            btn_addPont.Dock = DockStyle.Fill;
+            btn_addPont.Location = new Point(3, 3);
+            btn_addPont.Name = "btn_addPont";
+            btn_addPont.Size = new Size(162, 38);
+            btn_addPont.TabIndex = 0;
+            btn_addPont.Text = "Hozzáadás";
+            btn_addPont.UseVisualStyleBackColor = true;
+            btn_addPont.Click += btn_addPont_Click;
+            // 
             // flowLayoutPanel2
             // 
             flowLayoutPanel2.Controls.Add(label2);
-            flowLayoutPanel2.Controls.Add(textBox3);
+            flowLayoutPanel2.Controls.Add(yInput);
             flowLayoutPanel2.Dock = DockStyle.Fill;
             flowLayoutPanel2.Location = new Point(171, 47);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
@@ -112,38 +125,17 @@
             label2.TabIndex = 3;
             label2.Text = "Y:";
             // 
-            // textBox3
+            // yInput
             // 
-            textBox3.Location = new Point(26, 3);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(100, 23);
-            textBox3.TabIndex = 2;
-            // 
-            // button1
-            // 
-            button1.Dock = DockStyle.Fill;
-            button1.Location = new Point(3, 3);
-            button1.Name = "button1";
-            button1.Size = new Size(162, 38);
-            button1.TabIndex = 0;
-            button1.Text = "Hozzáadás";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
-            // button2
-            // 
-            button2.Dock = DockStyle.Fill;
-            button2.Location = new Point(171, 3);
-            button2.Name = "button2";
-            button2.Size = new Size(163, 38);
-            button2.TabIndex = 1;
-            button2.Text = "Eltávolítás";
-            button2.UseVisualStyleBackColor = true;
+            yInput.Location = new Point(26, 3);
+            yInput.Name = "yInput";
+            yInput.Size = new Size(120, 23);
+            yInput.TabIndex = 4;
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.Controls.Add(label1);
-            flowLayoutPanel1.Controls.Add(textBox1);
+            flowLayoutPanel1.Controls.Add(xInput);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.Location = new Point(3, 47);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -159,12 +151,22 @@
             label1.TabIndex = 3;
             label1.Text = "X:";
             // 
-            // textBox1
+            // xInput
             // 
-            textBox1.Location = new Point(26, 3);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 23);
-            textBox1.TabIndex = 2;
+            xInput.Location = new Point(26, 3);
+            xInput.Name = "xInput";
+            xInput.Size = new Size(120, 23);
+            xInput.TabIndex = 4;
+            // 
+            // btn_removePont
+            // 
+            btn_removePont.Dock = DockStyle.Fill;
+            btn_removePont.Location = new Point(171, 3);
+            btn_removePont.Name = "btn_removePont";
+            btn_removePont.Size = new Size(163, 38);
+            btn_removePont.TabIndex = 5;
+            btn_removePont.Text = "Eltávolítás";
+            btn_removePont.UseVisualStyleBackColor = true;
             // 
             // pictureBox1
             // 
@@ -189,8 +191,10 @@
             tableLayoutPanel2.ResumeLayout(false);
             flowLayoutPanel2.ResumeLayout(false);
             flowLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)yInput).EndInit();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)xInput).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
@@ -202,12 +206,12 @@
         private TableLayoutPanel tableLayoutPanel2;
         private FlowLayoutPanel flowLayoutPanel2;
         private Label label2;
-        private TextBox textBox3;
-        private Button button1;
-        private Button button2;
         private FlowLayoutPanel flowLayoutPanel1;
         private Label label1;
-        private TextBox textBox1;
         private PictureBox pictureBox1;
+        private NumericUpDown yInput;
+        private NumericUpDown xInput;
+        private Button btn_addPont;
+        private Button btn_removePont;
     }
 }
