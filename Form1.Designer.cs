@@ -39,7 +39,11 @@
             label1 = new Label();
             xInput = new NumericUpDown();
             btn_removePont = new Button();
-            pictureBox1 = new PictureBox();
+            flowLayoutPanel3 = new FlowLayoutPanel();
+            checkBox1 = new CheckBox();
+            checkBox2 = new CheckBox();
+            formsPlot1 = new ScottPlot.WinForms.FormsPlot();
+            show_LinRegress = new CheckBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tableLayoutPanel2.SuspendLayout();
@@ -47,7 +51,7 @@
             ((System.ComponentModel.ISupportInitialize)yInput).BeginInit();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)xInput).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            flowLayoutPanel3.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -57,7 +61,8 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 62.4315453F));
             tableLayoutPanel1.Controls.Add(dataGridView1, 0, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
-            tableLayoutPanel1.Controls.Add(pictureBox1, 1, 0);
+            tableLayoutPanel1.Controls.Add(flowLayoutPanel3, 1, 1);
+            tableLayoutPanel1.Controls.Add(formsPlot1, 1, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(10);
@@ -73,6 +78,7 @@
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Dock = DockStyle.Fill;
             dataGridView1.Location = new Point(3, 3);
+            dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(337, 389);
             dataGridView1.TabIndex = 0;
@@ -167,15 +173,59 @@
             btn_removePont.TabIndex = 5;
             btn_removePont.Text = "Eltávolítás";
             btn_removePont.UseVisualStyleBackColor = true;
+            btn_removePont.Click += btn_removePont_Click;
             // 
-            // pictureBox1
+            // flowLayoutPanel3
             // 
-            pictureBox1.Dock = DockStyle.Fill;
-            pictureBox1.Location = new Point(346, 3);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(564, 389);
-            pictureBox1.TabIndex = 2;
-            pictureBox1.TabStop = false;
+            flowLayoutPanel3.Controls.Add(checkBox1);
+            flowLayoutPanel3.Controls.Add(checkBox2);
+            flowLayoutPanel3.Controls.Add(show_LinRegress);
+            flowLayoutPanel3.Dock = DockStyle.Fill;
+            flowLayoutPanel3.Location = new Point(346, 398);
+            flowLayoutPanel3.Name = "flowLayoutPanel3";
+            flowLayoutPanel3.Size = new Size(564, 88);
+            flowLayoutPanel3.TabIndex = 2;
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(3, 3);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(115, 19);
+            checkBox1.TabIndex = 0;
+            checkBox1.Text = "Normalizát nézet";
+            checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+            // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(124, 3);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(183, 19);
+            checkBox2.TabIndex = 1;
+            checkBox2.Text = "kattintásra hozzáadott pontok";
+            checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // formsPlot1
+            // 
+            formsPlot1.DisplayScale = 1F;
+            formsPlot1.Dock = DockStyle.Fill;
+            formsPlot1.Location = new Point(346, 3);
+            formsPlot1.Name = "formsPlot1";
+            formsPlot1.Size = new Size(564, 389);
+            formsPlot1.TabIndex = 3;
+            formsPlot1.MouseDown += formsPlot1_MouseDown;
+            // 
+            // show_LinRegress
+            // 
+            show_LinRegress.AutoSize = true;
+            show_LinRegress.Location = new Point(313, 3);
+            show_LinRegress.Name = "show_LinRegress";
+            show_LinRegress.Size = new Size(176, 19);
+            show_LinRegress.TabIndex = 3;
+            show_LinRegress.Text = "Lineáris Regresszió mutatása";
+            show_LinRegress.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -195,7 +245,8 @@
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)xInput).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            flowLayoutPanel3.ResumeLayout(false);
+            flowLayoutPanel3.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -208,10 +259,14 @@
         private Label label2;
         private FlowLayoutPanel flowLayoutPanel1;
         private Label label1;
-        private PictureBox pictureBox1;
         private NumericUpDown yInput;
         private NumericUpDown xInput;
         private Button btn_addPont;
         private Button btn_removePont;
+        private FlowLayoutPanel flowLayoutPanel3;
+        private CheckBox checkBox1;
+        private CheckBox checkBox2;
+        private ScottPlot.WinForms.FormsPlot formsPlot1;
+        private CheckBox show_LinRegress;
     }
 }
