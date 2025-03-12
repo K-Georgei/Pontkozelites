@@ -42,8 +42,10 @@
             flowLayoutPanel3 = new FlowLayoutPanel();
             checkBox1 = new CheckBox();
             checkBox2 = new CheckBox();
-            formsPlot1 = new ScottPlot.WinForms.FormsPlot();
             show_LinRegress = new CheckBox();
+            HeatmapCheck = new CheckBox();
+            panel1 = new Panel();
+            formsPlot1 = new ScottPlot.WinForms.FormsPlot();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tableLayoutPanel2.SuspendLayout();
@@ -52,6 +54,7 @@
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)xInput).BeginInit();
             flowLayoutPanel3.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -62,7 +65,7 @@
             tableLayoutPanel1.Controls.Add(dataGridView1, 0, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
             tableLayoutPanel1.Controls.Add(flowLayoutPanel3, 1, 1);
-            tableLayoutPanel1.Controls.Add(formsPlot1, 1, 0);
+            tableLayoutPanel1.Controls.Add(panel1, 1, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(10);
@@ -180,6 +183,7 @@
             flowLayoutPanel3.Controls.Add(checkBox1);
             flowLayoutPanel3.Controls.Add(checkBox2);
             flowLayoutPanel3.Controls.Add(show_LinRegress);
+            flowLayoutPanel3.Controls.Add(HeatmapCheck);
             flowLayoutPanel3.Dock = DockStyle.Fill;
             flowLayoutPanel3.Location = new Point(346, 398);
             flowLayoutPanel3.Name = "flowLayoutPanel3";
@@ -207,16 +211,6 @@
             checkBox2.Text = "kattintásra hozzáadott pontok";
             checkBox2.UseVisualStyleBackColor = true;
             // 
-            // formsPlot1
-            // 
-            formsPlot1.DisplayScale = 1F;
-            formsPlot1.Dock = DockStyle.Fill;
-            formsPlot1.Location = new Point(346, 3);
-            formsPlot1.Name = "formsPlot1";
-            formsPlot1.Size = new Size(564, 389);
-            formsPlot1.TabIndex = 3;
-            formsPlot1.MouseDown += formsPlot1_MouseDown;
-            // 
             // show_LinRegress
             // 
             show_LinRegress.AutoSize = true;
@@ -226,6 +220,37 @@
             show_LinRegress.TabIndex = 3;
             show_LinRegress.Text = "Lineáris Regresszió mutatása";
             show_LinRegress.UseVisualStyleBackColor = true;
+            show_LinRegress.CheckedChanged += show_LinRegress_CheckedChanged;
+            // 
+            // HeatmapCheck
+            // 
+            HeatmapCheck.AutoSize = true;
+            HeatmapCheck.Location = new Point(3, 28);
+            HeatmapCheck.Name = "HeatmapCheck";
+            HeatmapCheck.Size = new Size(130, 19);
+            HeatmapCheck.TabIndex = 4;
+            HeatmapCheck.Text = "Hő térkép mutatása";
+            HeatmapCheck.UseVisualStyleBackColor = true;
+            HeatmapCheck.CheckedChanged += HeatmapCheck_CheckedChanged;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(formsPlot1);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(346, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(564, 389);
+            panel1.TabIndex = 3;
+            // 
+            // formsPlot1
+            // 
+            formsPlot1.DisplayScale = 1F;
+            formsPlot1.Dock = DockStyle.Fill;
+            formsPlot1.Location = new Point(0, 0);
+            formsPlot1.Name = "formsPlot1";
+            formsPlot1.Size = new Size(564, 389);
+            formsPlot1.TabIndex = 3;
+            formsPlot1.MouseDown += formsPlot1_MouseDown;
             // 
             // Form1
             // 
@@ -247,6 +272,7 @@
             ((System.ComponentModel.ISupportInitialize)xInput).EndInit();
             flowLayoutPanel3.ResumeLayout(false);
             flowLayoutPanel3.PerformLayout();
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -268,5 +294,7 @@
         private CheckBox checkBox2;
         private ScottPlot.WinForms.FormsPlot formsPlot1;
         private CheckBox show_LinRegress;
+        private CheckBox HeatmapCheck;
+        private Panel panel1;
     }
 }
