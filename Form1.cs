@@ -317,7 +317,7 @@ namespace Kozelites
                 else if (Math.Abs(min - errors[i]) > Math.Abs(max - errors[i]))
                 {
                     int r = 255;
-                    int g = (int)(255 * (errors[i] / max));
+                    int g = (int)(255 * (errors[i] / max));//ez se lesz így jó szerintem
                     int b = 0;
 
                 }
