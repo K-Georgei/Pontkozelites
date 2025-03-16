@@ -17,6 +17,8 @@ namespace Kozelites
         public float XY { get; set; }
 
         public static int counter = 0; // Statikus számláló az összes példányhoz
+        public Color PointColor { get; set; } // New property for color
+
 
         public Pont2D(float x = 0, float y = 0)
         {
@@ -25,7 +27,7 @@ namespace Kozelites
             Y = y;
             X2 = (float)Math.Pow(x, 2);
             XY = x * y;
-           
+            PointColor = Color.Black; // Default color
         }
 
         

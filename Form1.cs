@@ -135,7 +135,7 @@ namespace Kozelites
 
         #endregion
 
-        private List<Pont2D> Normalize(List<Pont2D> pontok)
+        private List<Pont2D> Normalize(List<Pont2D> pontok, int width = 1, int height = 1)
         {
             List<Pont2D> tmp = new List<Pont2D>();
 
@@ -155,8 +155,8 @@ namespace Kozelites
 
                 foreach (var p in pontok)
                 {
-                    float normX = (p.X - minX) / (maxX - minX);
-                    float normY = (p.Y - minY) / (maxY - minY);
+                    float normX = (p.X - minX) / (maxX - minX) * width;
+                    float normY = (p.Y - minY) / (maxY - minY) * height;
                     //TODO a pontok nevét frissíteni
                     tmp.Add(new Pont2D(normX, normY));
                 }
@@ -261,105 +261,72 @@ namespace Kozelites
             int gridWidth = frame.Width;
             int gridHeight = frame.Height;
             Bitmap bitmap = new Bitmap(gridWidth, gridHeight);
-            List<Pont2D> normpont = Normalize(pontok.ToList());
-           
-            float nearest = CalculateError().Min();
-            float furhest = CalculateError().Max();
 
-            GetHeatmapColor(CalculateError(), nearest, furhest);
+            List<Pont2D> normpont = Normalize(pontok.ToList(), gridWidth, gridHeight);
+            List<float> errors = CalculateError();
 
-            /*using (Graphics g = Graphics.FromImage(bitmap))
+            float nearest = errors.Min();
+            float furhest = errors.Max();
+            
+            Debug.WriteLine($"Nearest: {nearest}, Furhest: {furhest}\n");
+
+            for (int i = 0; i < normpont.Count; i++)
+            {
+                float error = errors[i];
+                Color color = GetHeatmapColor(error, nearest, furhest);
+                Debug.WriteLine($"{error}, {color}");
+                normpont[i].PointColor = color; // Assign color to Pont2D instance
+            }
+
+
+            using (Graphics g = Graphics.FromImage(bitmap))
             {
                 g.Clear(Color.Black);
-                for (int y = 0; y < bitmap.Height; y++)
+                foreach (var point in normpont)
                 {
-                    for (int x = 0; x < bitmap.Width; x++)
-                    {
-                        float normY = (float)y / bitmap.Height;
-                        float normX = (float)x / bitmap.Width;
-                        foreach (Pont2D p in normpont)
-                        {
-                            d = (float)Math.Pow(p.Y - (a1 * p.X + a0), 2);
-                            Color brushes = GetHeatmapColor(d);
-                            float epsilon = (float)numericUpDown1.Value / 10000;
-                            if (Math.Abs(normY - p.Y) < epsilon && Math.Abs(normX - p.X) < epsilon)
-                            {
-                                g.FillEllipse(new SolidBrush(brushes), x, y, 2f, 2f);
-                                
-                            }
-                        }
-
-                    }
+                    // Use point.PointColor to set the color for drawing
+                    g.FillEllipse(new SolidBrush(point.PointColor), point.X, point.Y, 20f, 20f);
                 }
-            bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            bitmap.Save("heatmap.bmp"); // Mentés
-            Debug.WriteLine("Heatmap saved as heatmap.bmp");
 
-            pictureBox1.BackgroundImage = bitmap;*/
-        }
+              
 
+                bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                bitmap.Save("heatmap.bmp"); // Mentés
+                Debug.WriteLine("Heatmap saved as heatmap.bmp");
 
-
-        private void GetHeatmapColor(List<float> errors, float min, float max)
-        {
-            float arany = min / max;
-
-            for (int i = 0; i < errors.Count; i++)
-            {
-
-                if (Math.Abs(min-errors[i]) < Math.Abs(max - errors[i]))
-                {
-                    int r = (int)(255 * (errors[i] / min)); // Zöldbõl sárgába: R növekszik 0-ról 255-re
-                    int g = 255;
-                    int b = 0;
-
-                }
-                else if (Math.Abs(min - errors[i]) > Math.Abs(max - errors[i]))
-                {
-                    int r = 255;
-                    int g = (int)(255 * (errors[i] / max));//ez se lesz így jó szerintem
-                    int b = 0;
-
-                }
+                pictureBox1.BackgroundImage = bitmap;
             }
         }
 
-
-
-        // Színátmenet függvény (piros, sárga, zöld)
-        /*private Color GetHeatmapColor(double value, int low, int mid, int high)
+        private Color GetHeatmapColor(float error, float min, float max)
         {
-            float lowbound = (float)Math.Round(low / 101.0, 4);
-            float midbound = (float)Math.Round(mid / 101.0, 4);
-            float highbound = (float)Math.Round(high / 101.0, 4);
-
-
-            // Piros (1.0) -> Sárga (0.5) -> Zöld (0.0)
-            // Piros Távol
-            // Sárga mid
-            // Zöld közel
-            if (value < lowbound)
+            int r = 0;
+            int g = 0;
+            int b = 0;
+            if (error == min)
             {
-                // Zöld (0, 255, 0) -> Sárga (255, 255, 0)
-                int r = Math.Clamp((int)(255 * (value / lowbound)),0,255); // Zöldbõl sárgába: R növekszik 0-ról 255-re
-                int g = 255;
-                int b = 0;
+                r = 0;
+                g = 255;
                 return Color.FromArgb(r, g, b);
             }
-            else if (value < highbound)
+            else if (error == max)
             {
-                // Sárga (255, 255, 0) -> Piros (255, 0, 0)
-                int r = 255;
-                int g = Math.Clamp((int)(255 * (1 - (value - lowbound) / midbound)),0,255); // Sárgából pirosba: G csökken 255-rõl 0-ra
-                int b = 0;
+                r = 255;
+                g = 0;
                 return Color.FromArgb(r, g, b);
             }
             else
             {
-                // Piros (255, 0, 0)
-                return Color.FromArgb(255, 0, 0);
+                float ratio = (error - min) / (max - min);
+                r = Math.Clamp((int)(ratio * 255), 0, 255);
+                g = Math.Clamp((int)((1 - ratio) * 255), 0, 255);
+                return Color.FromArgb(r, g, b);
             }
-        }*/
+        }
+
+
+
+
         private void show_LinRegress_CheckedChanged(object sender, EventArgs e)
         {
             if (show_LinRegress.Checked)
