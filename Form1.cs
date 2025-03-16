@@ -36,8 +36,6 @@ namespace Kozelites
 
         public Bitmap bg;
 
-
-
         public Form1()
         {
             InitializeComponent();
@@ -137,25 +135,6 @@ namespace Kozelites
 
         #endregion
 
-
-        private Pont2D GetMin(List<Pont2D> pontlista)
-        {
-            float minX = pontok.Min(p => p.X);
-            float minY = pontok.Min(p => p.Y);
-
-            return new Pont2D(minX, minY);
-
-        }
-
-        private Pont2D GetMax(List<Pont2D> pontlista)
-        {
-            float maxX = pontok.Max(p => p.X);
-            float maxY = pontok.Max(p => p.Y);
-
-            return new Pont2D(maxX, maxY);
-        }
-
-
         private List<Pont2D> Normalize(List<Pont2D> pontok)
         {
             List<Pont2D> tmp = new List<Pont2D>();
@@ -182,7 +161,7 @@ namespace Kozelites
                     tmp.Add(new Pont2D(normX, normY));
                 }
 
-                //refreshGraph(tmp);
+                refreshGraph(tmp);
                 return tmp;
             }
             else
@@ -224,6 +203,21 @@ namespace Kozelites
 
         }
 
+
+        private List<float> CalculateError()
+        {
+            float d = 0.0f;
+            List<float> errors = new List<float>();
+
+            foreach (Pont2D p in pontok)
+            {
+                d = (float)Math.Pow(p.Y - (a1 * p.X + a0), 2);
+                errors.Add(d);
+            }
+
+            return errors;
+        }
+
         private LinePlot CalculateLinRegression()
         {
             if (pontok.Count < 2)
@@ -255,7 +249,7 @@ namespace Kozelites
             line.LinePattern = LinePattern.Solid;
 
             // Frissítés
-            // formsPlot1.Refresh();
+            formsPlot1.Refresh();
             return line;
 
         }
@@ -268,13 +262,15 @@ namespace Kozelites
             int gridHeight = frame.Height;
             Bitmap bitmap = new Bitmap(gridWidth, gridHeight);
             List<Pont2D> normpont = Normalize(pontok.ToList());
-            float d = 0.0f;
+           
+            float nearest = CalculateError().Min();
+            float furhest = CalculateError().Max();
 
-            using (Graphics g = Graphics.FromImage(bitmap))
+            GetHeatmapColor(CalculateError(), nearest, furhest);
+
+            /*using (Graphics g = Graphics.FromImage(bitmap))
             {
                 g.Clear(Color.Black);
-                StreamWriter sw = new StreamWriter("asd.csv");
-                //normalize image dim
                 for (int y = 0; y < bitmap.Height; y++)
                 {
                     for (int x = 0; x < bitmap.Width; x++)
@@ -284,36 +280,54 @@ namespace Kozelites
                         foreach (Pont2D p in normpont)
                         {
                             d = (float)Math.Pow(p.Y - (a1 * p.X + a0), 2);
-                            Color brushes = GetHeatmapColor(d, track_min.Value, track_mid.Value, track_max.Value);
+                            Color brushes = GetHeatmapColor(d);
                             float epsilon = (float)numericUpDown1.Value / 10000;
                             if (Math.Abs(normY - p.Y) < epsilon && Math.Abs(normX - p.X) < epsilon)
                             {
-                                g.FillEllipse(new SolidBrush(brushes), x - 1.5f, y - 1.5f, 1.5f, 1.5f);
-                                sw.Write($"x:{x-1.5f}; y:{y-1.5f}; d: {d}; color:{brushes};\n");
+                                g.FillEllipse(new SolidBrush(brushes), x, y, 2f, 2f);
                                 
                             }
                         }
 
                     }
                 }
-
-                sw.Close();
-            }
-
-
-
             bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
             bitmap.Save("heatmap.bmp"); // Mentés
             Debug.WriteLine("Heatmap saved as heatmap.bmp");
 
-            pictureBox1.BackgroundImage = bitmap;
-
-
+            pictureBox1.BackgroundImage = bitmap;*/
         }
 
 
+
+        private void GetHeatmapColor(List<float> errors, float min, float max)
+        {
+            float arany = min / max;
+
+            for (int i = 0; i < errors.Count; i++)
+            {
+
+                if (Math.Abs(min-errors[i]) < Math.Abs(max - errors[i]))
+                {
+                    int r = (int)(255 * (errors[i] / min)); // Zöldbõl sárgába: R növekszik 0-ról 255-re
+                    int g = 255;
+                    int b = 0;
+
+                }
+                else if (Math.Abs(min - errors[i]) > Math.Abs(max - errors[i]))
+                {
+                    int r = 255;
+                    int g = (int)(255 * (errors[i] / max));
+                    int b = 0;
+
+                }
+            }
+        }
+
+
+
         // Színátmenet függvény (piros, sárga, zöld)
-        private Color GetHeatmapColor(double value, int low, int mid, int high)
+        /*private Color GetHeatmapColor(double value, int low, int mid, int high)
         {
             float lowbound = (float)Math.Round(low / 101.0, 4);
             float midbound = (float)Math.Round(mid / 101.0, 4);
@@ -345,7 +359,7 @@ namespace Kozelites
                 // Piros (255, 0, 0)
                 return Color.FromArgb(255, 0, 0);
             }
-        }
+        }*/
         private void show_LinRegress_CheckedChanged(object sender, EventArgs e)
         {
             if (show_LinRegress.Checked)
@@ -372,16 +386,16 @@ namespace Kozelites
 
         private void track_min_Scroll(object sender, EventArgs e)
         {
-            label6.Text = $"{Math.Round(track_min.Value / 100.0, 4)}";
+            label6.Text = $"{Math.Round(track_min.Value / 101.0, 4)}";
         }
         private void track_mid_Scroll(object sender, EventArgs e)
         {
-            label8.Text = $"{Math.Round(track_mid.Value / 100.0, 4)}";
+            label8.Text = $"{Math.Round(track_mid.Value / 101.0, 4)}";
         }
 
         private void track_max_Scroll(object sender, EventArgs e)
         {
-            label7.Text = $"{Math.Round(track_max.Value / 100.0, 4)}";
+            label7.Text = $"{Math.Round(track_max.Value / 101.0, 4)}";
         }
 
         
