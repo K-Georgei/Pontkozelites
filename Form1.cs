@@ -205,12 +205,9 @@ namespace Kozelites
 
             n = pontok.Count;
 
-            //a1 = (n * xysum - xsum * ysum) / (n * x2sum - (xsum * xsum));
-            //a0 = (ysum - a1 * xsum) / n;
-
-            
             a0 = (x2sum * ysum - xsum * xysum) / (n * x2sum - (xsum*xsum));
             a1 = (n * xysum - xsum * ysum) / (n * x2sum - (xsum*xsum));
+
             ShowA0A1.Text = $"a0: {a0},     a1: {a1}";
 
         }
@@ -289,7 +286,7 @@ namespace Kozelites
 
             using (Graphics g = Graphics.FromImage(bitmap))
             {
-                g.Clear(Color.Black);
+                g.Clear(Color.White);
                 float size = 20f;
                 float radius = size / 2;
 
@@ -302,6 +299,9 @@ namespace Kozelites
                 }
 
                 bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                bitmap.Save("heatmap.bmp");
+                Debug.WriteLine("Heatmap saved as heatmap.bmp");
+                BlurHeatmap(bitmap);
                 bitmap.Save("heatmap.bmp");
                 Debug.WriteLine("Heatmap saved as heatmap.bmp");
 
@@ -334,6 +334,58 @@ namespace Kozelites
                 g = Math.Clamp((int)((1 - ratio) * 255), 0, 255);
                 return Color.FromArgb(128, r, g, b);
             }
+        }
+
+        private void BlurHeatmap(Bitmap bitmap)
+        {
+            Bitmap tempBitmap = new Bitmap(bitmap);
+
+            for (int i = 1; i < bitmap.Width - 1; i++)
+            {
+                for (int j = 1; j < bitmap.Height - 1; j++)
+                {
+                    Color currentColor = bitmap.GetPixel(i, j);
+                    if (currentColor != Color.FromArgb(0,0,0))
+                    {
+                        bitmap.SetPixel(i, j, GetBlurredColor(bitmap,i,j));
+
+                    }
+                }
+            }
+        }
+
+        private Color GetBlurredColor(Bitmap bitmap, int x, int y)
+        {
+            int r = 0, g = 0, b = 0;
+
+            int[,] gaussKernel = new int[,]
+            {
+                {1, 4, 7, 4, 1},
+                {4, 16, 26, 16, 4},
+                {7, 26, 41, 26, 7},
+                {4, 16, 26, 16, 4},
+                {1, 4, 7, 4, 1}
+            };
+
+            int kernelSum = 273; // Sum of all kernel values
+
+            // Iterate over the 5x5 area around the pixel
+            for (int dx = -2; dx <= 2; dx++)
+            {
+                for (int dy = -2; dy <= 2; dy++)
+                {
+                    int kernelValue = gaussKernel[dx + 2, dy + 2];
+                    int neighborX = Math.Clamp(x + dx, 0, bitmap.Width - 1);
+                    int neighborY = Math.Clamp(y + dy, 0, bitmap.Height - 1);
+                    Color neighborColor = bitmap.GetPixel(neighborX, neighborY);
+                    r += neighborColor.R * kernelValue;
+                    g += neighborColor.G * kernelValue;
+                    b += neighborColor.B * kernelValue;
+                }
+            }
+
+            // Average the colors
+            return Color.FromArgb(r / kernelSum, g / kernelSum, b / kernelSum);
         }
 
 
@@ -372,6 +424,7 @@ namespace Kozelites
             XOut.Text = $"{(decimal)(SolveForY_numeric.Value - (decimal)a0) / (decimal)a1}";
         }
 
+        #region InsertFunction
         private void RandomPonts()
         {
             for (int i = 0; i < maxIter; i++)
@@ -554,15 +607,12 @@ namespace Kozelites
         }
 
 
-
-
+        #endregion
 
         private void Scatter_points_Click(object sender, EventArgs e)
         {
             insertFunction.ShowDialog();
             insertFunction.AcceptButton = insertFunction.InsertScatter_points;
-
-            
 
             if (insertFunction.DialogResult == DialogResult.OK)
             {
