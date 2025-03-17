@@ -3,15 +3,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.Logging;
 using ScottPlot;
 using ScottPlot.DataGenerators;
 using ScottPlot.Plottables;
 using ScottPlot.WinForms;
-using static System.Windows.Forms.AxHost;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Color = System.Drawing.Color;
 
 namespace Kozelites
@@ -19,6 +15,12 @@ namespace Kozelites
     public partial class Form1 : Form
     {
         public BindingList<Pont2D> pontok;
+
+        public Random rand;
+
+        public bool isNoiseEnabled;
+        public float noise;
+
 
         public float minX;
         public float minY;
@@ -31,29 +33,47 @@ namespace Kozelites
         public float xysum;
         public int n;
 
+        public int maxIter;
+
         public float a0;
         public float a1;
 
         public Bitmap bg;
 
+        public InsertFunction insertFunction;
+
         public Form1()
         {
             InitializeComponent();
+
+            insertFunction = new InsertFunction();
+            
+            rand = new Random();
+
+            isNoiseEnabled = insertFunction.checkBox1.Checked;
+            noise = (float)(insertFunction.trackBar1.Value*rand.NextDouble());
+
+
             xInput.Maximum = decimal.MaxValue;
             xInput.Minimum = decimal.MinValue;
             yInput.Maximum = decimal.MaxValue;
             yInput.Minimum = decimal.MinValue;
 
-            label6.Text = "0";
-            label7.Text = "0";
-            label8.Text = "0";
-
-
             pontok = new BindingList<Pont2D>(); // Ez automatikusan frissíti a DataGridView-t
             dataGridView1.DataSource = pontok;
 
-            dataGridView1.AllowUserToOrderColumns = true;
+            dataGridView1.AllowUserToOrderColumns = false;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            toolTip1.SetToolTip(button1, $"Menj a {tabPage3.Name} fülre");
+            toolTip2.SetToolTip(HeatmapCheck, $"Menj a {tabPage2.Name} fülre");
+
+
+            ShowA0A1.Text = $"a0: 0,     a1: 0";
+
+
+            maxIter = (int)insertFunction.MaxIterations.Value;
+
 
         }
 
@@ -113,7 +133,7 @@ namespace Kozelites
                 formsPlot1.Plot.Add.Scatter(p.X, p.Y);
 
             }
-            formsPlot1.Plot.Axes.AutoScale();
+            //formsPlot1.Plot.Axes.AutoScale();
             formsPlot1.Refresh();
         }
 
@@ -128,7 +148,7 @@ namespace Kozelites
                     formsPlot1.Plot.Add.Scatter(p.X, p.Y);
                 }
 
-                formsPlot1.Plot.Axes.AutoScale();
+                //formsPlot1.Plot.Axes.AutoScale();
             }
             formsPlot1.Refresh();
         }
@@ -161,28 +181,15 @@ namespace Kozelites
                     tmp.Add(new Pont2D(normX, normY));
                 }
 
-                refreshGraph(tmp);
+                //refreshGraph(tmp);
                 return tmp;
             }
             else
             {
-                MessageBox.Show("Nincs elegendõ adat", "Figyelmeztetés", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                checkBox1.Checked = false;
                 return null;
             }
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox1.Checked)
-            {
-                Normalize(pontok.ToList());
-            }
-            else
-            {
-                refreshGraph(pontok.ToList());
-            }
-        }
 
         private void SetValues()
         {
@@ -198,8 +205,13 @@ namespace Kozelites
 
             n = pontok.Count;
 
-            a0 = (x2sum * ysum - xsum * xysum) / (n * x2sum - xsum);
-            a1 = (n * xysum - xsum * ysum) / (n * x2sum - xsum);
+            //a1 = (n * xysum - xsum * ysum) / (n * x2sum - (xsum * xsum));
+            //a0 = (ysum - a1 * xsum) / n;
+
+            
+            a0 = (x2sum * ysum - xsum * xysum) / (n * x2sum - (xsum*xsum));
+            a1 = (n * xysum - xsum * ysum) / (n * x2sum - (xsum*xsum));
+            ShowA0A1.Text = $"a0: {a0},     a1: {a1}";
 
         }
 
@@ -220,11 +232,7 @@ namespace Kozelites
 
         private LinePlot CalculateLinRegression()
         {
-            if (pontok.Count < 2)
-            {
-                MessageBox.Show("Több adatpontra van szükség!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
+            
             // Start és end koordináták az egyeneshez
             double startX = minX;
             double startY = a1 * minX + a0;
@@ -254,7 +262,7 @@ namespace Kozelites
 
         }
 
-        private void Heatmap(LinePlot line) // params: LinePlot line, float a1, float a0
+        private void Heatmap(LinePlot line)
         {
 
             Size frame = formsPlot1.Size;
@@ -267,7 +275,7 @@ namespace Kozelites
 
             float nearest = errors.Min();
             float furhest = errors.Max();
-            
+
             Debug.WriteLine($"Nearest: {nearest}, Furhest: {furhest}\n");
 
             for (int i = 0; i < normpont.Count; i++)
@@ -275,27 +283,31 @@ namespace Kozelites
                 float error = errors[i];
                 Color color = GetHeatmapColor(error, nearest, furhest);
                 Debug.WriteLine($"{error}, {color}");
-                normpont[i].PointColor = color; // Assign color to Pont2D instance
+                normpont[i].PointColor = color;
             }
 
 
             using (Graphics g = Graphics.FromImage(bitmap))
             {
                 g.Clear(Color.Black);
+                float size = 20f;
+                float radius = size / 2;
+
                 foreach (var point in normpont)
                 {
-                    // Use point.PointColor to set the color for drawing
-                    g.FillEllipse(new SolidBrush(point.PointColor), point.X, point.Y, 20f, 20f);
+                    float x = Math.Clamp(point.X - radius, 0, gridWidth - size);
+                    float y = Math.Clamp(point.Y - radius, 0, gridHeight - size);
+
+                    g.FillEllipse(new SolidBrush(point.PointColor), x, y, size, size);
                 }
 
-              
-
                 bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-                bitmap.Save("heatmap.bmp"); // Mentés
+                bitmap.Save("heatmap.bmp");
                 Debug.WriteLine("Heatmap saved as heatmap.bmp");
 
                 pictureBox1.BackgroundImage = bitmap;
             }
+
         }
 
         private Color GetHeatmapColor(float error, float min, float max)
@@ -318,58 +330,311 @@ namespace Kozelites
             else
             {
                 float ratio = (error - min) / (max - min);
-                r = Math.Clamp((int)(ratio * 255), 0, 255);
+                r = Math.Clamp((int)((1 - ratio) * 255), 0, 255);
                 g = Math.Clamp((int)((1 - ratio) * 255), 0, 255);
-                return Color.FromArgb(r, g, b);
+                return Color.FromArgb(128, r, g, b);
             }
         }
 
 
-
-
         private void show_LinRegress_CheckedChanged(object sender, EventArgs e)
         {
-            if (show_LinRegress.Checked)
+            if (show_LinRegress.Checked && pontok.Count < 2)
             {
-                CalculateLinRegression();
+                MessageBox.Show("Több adatpontra van szükség!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                show_LinRegress.Checked = false;
+                refreshGraph(pontok.ToList());
             }
             else
             {
-                refreshGraph(pontok.ToList());
+                CalculateLinRegression();
+               
             }
         }
 
         private void HeatmapCheck_CheckedChanged(object sender, EventArgs e)
         {
-            if (HeatmapCheck.Checked)
+            if (HeatmapCheck.Checked && pontok.Count < 2)
+            {
+                MessageBox.Show("Nincs elég adat a heatmap megjelenítéséhez", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                HeatmapCheck.Checked = false;
+            }
+            else if (HeatmapCheck.Checked && pontok.Count >= 2)
             {
                 Heatmap(CalculateLinRegression());
+                tabControl1.SelectedTab = tabPage2;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            YOut.Text = $"{(decimal)a1 * SolveForX_numeric.Value + (decimal)a0}";
+            XOut.Text = $"{(decimal)(SolveForY_numeric.Value - (decimal)a0) / (decimal)a1}";
+        }
+
+        private void RandomPonts()
+        {
+            for (int i = 0; i < maxIter; i++)
+            {
+                AddPont(rand.Next(-10, 10), rand.Next(-10, 10));
+            }
+        }
+
+        private void AbsPonts()
+        {
+           
+            if (isNoiseEnabled)
+            {
+                for (int i = maxIter; i > -1; i--)
+                {
+                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                    AddPont(-i + noise, i + noise);
+
+                    if (i != 0) // Nullát csak egyszer rajzoljuk
+                    {
+                        AddPont(Math.Abs(-i + noise), Math.Abs(i + noise));
+                    }
+                }
             }
             else
             {
+                for (int i = maxIter; i > -1; i--)
+                {
+                    AddPont(-i, i);
+
+                    if (i != 0) // Nullát csak egyszer rajzoljuk
+                    {
+                        AddPont(Math.Abs(-i), Math.Abs(i));
+                    }
+                }
+            }
+            
+        }
+
+        private void Logaritmic()
+        {
+            if (isNoiseEnabled)
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                    AddPont(i, (float)Math.Log(i+noise));
+                }
+            }
+            else
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    AddPont(i, (float)Math.Log(i));
+                }
+            }
+
+           
+        }
+
+        private void Exponencialis()
+        {
+            if (isNoiseEnabled)
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                    AddPont(i, (float)Math.Exp(i+ noise));
+                }
+            }
+            else
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    AddPont(i, (float)Math.Exp(i));
+                }
+            }
+            
+        }
+
+        private void Gyok()
+        {
+            if (isNoiseEnabled)
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                    AddPont(i, (float)Math.Sqrt(i+ noise));
+                }
+            }
+            else 
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    AddPont(i, (float)Math.Sqrt(i));
+                }
+            }
+           
+        }
+
+        private void Harmadfoku()
+        {
+            if (isNoiseEnabled)
+            {
+                for (int i = -maxIter; i < maxIter; i++)
+                {
+                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                    AddPont(i, (float)Math.Pow(i+noise, 3));
+                }
+            }
+            else
+            {
+                for (int i = -maxIter; i < maxIter; i++)
+                {
+                    AddPont(i, (float)Math.Pow(i, 3));
+                }
+            }
+            
+        }
+
+
+        private void Masodfoku()
+        {
+            if (isNoiseEnabled)
+            {
+                for (int i = -maxIter; i < maxIter + 1; i++)
+                {
+                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                    AddPont(i, (float)Math.Pow(i+noise, 2));
+                }
+            }
+            else
+            {
+                for (int i = -maxIter; i < maxIter + 1; i++)
+                {
+                    AddPont(i, (float)Math.Pow(i, 2));
+                }
+            }
+           
+        }
+
+        private void Sinus()
+        {
+            if (isNoiseEnabled)
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                    AddPont(i, (float)Math.Sin(i+noise));
+                }
+            }
+            else
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    AddPont(i, (float)Math.Sin(i));
+                }
+            }   
+
+           
+        }
+
+        private void Cosinus()
+        {
+            if (isNoiseEnabled)
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                    AddPont(i, (float)Math.Sin(i + noise));
+                }
+            }
+            else
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    AddPont(i, (float)Math.Cos(i));
+                }
+            }
+        }
+
+
+
+
+
+        private void Scatter_points_Click(object sender, EventArgs e)
+        {
+            insertFunction.ShowDialog();
+            insertFunction.AcceptButton = insertFunction.InsertScatter_points;
+
+            
+
+            if (insertFunction.DialogResult == DialogResult.OK)
+            {
+                string selectedFunction = insertFunction.FunctionsList.SelectedItem.ToString();
+
+                if (string.IsNullOrEmpty(selectedFunction))
+                {
+                    MessageBox.Show("Kérlek válassz egy függvényt a listából", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                isNoiseEnabled = insertFunction.checkBox1.Checked;
+                noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+
+                switch (selectedFunction)
+                {
+                case "Sin":
+                    Sinus();
+                    break;
+
+                case "Cos":
+                    Cosinus();
+                    break;
+
+                case "Másodfokú":
+                    Masodfoku();
+                    break;
+
+                case "Harmadfokú":
+                    Harmadfoku();
+                    break;
+
+                case "Gyök":
+                    Gyok();
+                    break;
+
+                case "Exponenciális":
+                    Exponencialis();
+                    break;
+
+                case "Logaritmus":
+                    Logaritmic();
+                    break;
+
+                case "Abszolútérték":
+                    AbsPonts();
+                    break;
+
+                case "Véletlenszerû":
+                    RandomPonts();
+                    break;
+
+                default:
+                    MessageBox.Show("Ismeretlen függvény", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+            }
 
             }
         }
 
-        private void track_min_Scroll(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)
         {
-            label6.Text = $"{Math.Round(track_min.Value / 101.0, 4)}";
-        }
-        private void track_mid_Scroll(object sender, EventArgs e)
-        {
-            label8.Text = $"{Math.Round(track_mid.Value / 101.0, 4)}";
-        }
-
-        private void track_max_Scroll(object sender, EventArgs e)
-        {
-            label7.Text = $"{Math.Round(track_max.Value / 101.0, 4)}";
+            pontok.Clear();
+            HeatmapCheck.Checked = false;
+            show_LinRegress.Checked = false;
+            checkBox2.Checked = false;
+            UpdatePlot();
         }
 
-        
-
-        private void RecalcImg_btn_Click(object sender, EventArgs e)
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            Heatmap(CalculateLinRegression());
+            maxIter = (int)insertFunction.MaxIterations.Value;
         }
     }
 }
