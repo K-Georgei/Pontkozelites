@@ -44,9 +44,11 @@
             checkBox2 = new CheckBox();
             show_LinRegress = new CheckBox();
             HeatmapCheck = new CheckBox();
+            groupBox1 = new GroupBox();
+            flowLayoutPanel7 = new FlowLayoutPanel();
+            Scatter_points = new Button();
             button1 = new Button();
             button2 = new Button();
-            Scatter_points = new Button();
             panel1 = new Panel();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
@@ -72,8 +74,6 @@
             toolTip1 = new ToolTip(components);
             toolTip2 = new ToolTip(components);
             toolTip3 = new ToolTip(components);
-            groupBox1 = new GroupBox();
-            flowLayoutPanel7 = new FlowLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tableLayoutPanel2.SuspendLayout();
@@ -82,6 +82,8 @@
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)xInput).BeginInit();
             flowLayoutPanel3.SuspendLayout();
+            groupBox1.SuspendLayout();
+            flowLayoutPanel7.SuspendLayout();
             panel1.SuspendLayout();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
@@ -94,8 +96,6 @@
             ((System.ComponentModel.ISupportInitialize)SolveForX_numeric).BeginInit();
             flowLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SolveForY_numeric).BeginInit();
-            groupBox1.SuspendLayout();
-            flowLayoutPanel7.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -263,6 +263,38 @@
             HeatmapCheck.UseVisualStyleBackColor = true;
             HeatmapCheck.CheckedChanged += HeatmapCheck_CheckedChanged;
             // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(flowLayoutPanel7);
+            groupBox1.Dock = DockStyle.Bottom;
+            groupBox1.Location = new Point(3, 28);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(415, 52);
+            groupBox1.TabIndex = 8;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "groupBox1";
+            // 
+            // flowLayoutPanel7
+            // 
+            flowLayoutPanel7.Controls.Add(Scatter_points);
+            flowLayoutPanel7.Controls.Add(button1);
+            flowLayoutPanel7.Controls.Add(button2);
+            flowLayoutPanel7.Dock = DockStyle.Fill;
+            flowLayoutPanel7.Location = new Point(3, 19);
+            flowLayoutPanel7.Name = "flowLayoutPanel7";
+            flowLayoutPanel7.Size = new Size(409, 30);
+            flowLayoutPanel7.TabIndex = 0;
+            // 
+            // Scatter_points
+            // 
+            Scatter_points.Location = new Point(3, 3);
+            Scatter_points.Name = "Scatter_points";
+            Scatter_points.Size = new Size(130, 23);
+            Scatter_points.TabIndex = 6;
+            Scatter_points.Text = "Függvény Beszúrása";
+            Scatter_points.UseVisualStyleBackColor = true;
+            Scatter_points.Click += Scatter_points_Click;
+            // 
             // button1
             // 
             button1.Location = new Point(139, 3);
@@ -282,16 +314,6 @@
             button2.Text = "Minden pont törlése";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
-            // 
-            // Scatter_points
-            // 
-            Scatter_points.Location = new Point(3, 3);
-            Scatter_points.Name = "Scatter_points";
-            Scatter_points.Size = new Size(130, 23);
-            Scatter_points.TabIndex = 6;
-            Scatter_points.Text = "Függvény Beszúrása";
-            Scatter_points.UseVisualStyleBackColor = true;
-            Scatter_points.Click += Scatter_points_Click;
             // 
             // panel1
             // 
@@ -511,28 +533,6 @@
             ShowA0A1.TabIndex = 6;
             ShowA0A1.Text = "label7";
             // 
-            // groupBox1
-            // 
-            groupBox1.Controls.Add(flowLayoutPanel7);
-            groupBox1.Dock = DockStyle.Bottom;
-            groupBox1.Location = new Point(3, 28);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(415, 52);
-            groupBox1.TabIndex = 8;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "groupBox1";
-            // 
-            // flowLayoutPanel7
-            // 
-            flowLayoutPanel7.Controls.Add(Scatter_points);
-            flowLayoutPanel7.Controls.Add(button1);
-            flowLayoutPanel7.Controls.Add(button2);
-            flowLayoutPanel7.Dock = DockStyle.Fill;
-            flowLayoutPanel7.Location = new Point(3, 19);
-            flowLayoutPanel7.Name = "flowLayoutPanel7";
-            flowLayoutPanel7.Size = new Size(409, 30);
-            flowLayoutPanel7.TabIndex = 0;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -541,7 +541,6 @@
             Controls.Add(tableLayoutPanel1);
             Name = "Form1";
             Text = "Form1";
-            Load += Form1_Load;
             tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             tableLayoutPanel2.ResumeLayout(false);
@@ -553,6 +552,8 @@
             ((System.ComponentModel.ISupportInitialize)xInput).EndInit();
             flowLayoutPanel3.ResumeLayout(false);
             flowLayoutPanel3.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            flowLayoutPanel7.ResumeLayout(false);
             panel1.ResumeLayout(false);
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
@@ -568,8 +569,6 @@
             flowLayoutPanel5.ResumeLayout(false);
             flowLayoutPanel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)SolveForY_numeric).EndInit();
-            groupBox1.ResumeLayout(false);
-            flowLayoutPanel7.ResumeLayout(false);
             ResumeLayout(false);
         }
 

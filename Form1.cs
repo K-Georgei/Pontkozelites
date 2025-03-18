@@ -1,13 +1,7 @@
-using System.Collections.Generic;
+using ScottPlot;
+using ScottPlot.Plottables;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using ScottPlot;
-using ScottPlot.DataGenerators;
-using ScottPlot.Plottables;
-using ScottPlot.WinForms;
 using Color = System.Drawing.Color;
 
 namespace Kozelites
@@ -17,10 +11,6 @@ namespace Kozelites
         public BindingList<Pont2D> pontok;
 
         public Random rand;
-
-        public bool isNoiseEnabled;
-        public float noise;
-
 
         public float minX;
         public float minY;
@@ -33,26 +23,29 @@ namespace Kozelites
         public float xysum;
         public int n;
 
-        public int maxIter;
-
         public float a0;
         public float a1;
 
         public Bitmap bg;
 
         public InsertFunction insertFunction;
+        public string selectedFunction;
+        public bool isNoiseEnabled;
+        public float noise;
+        public int maxIter;
+
+
 
         public Form1()
         {
             InitializeComponent();
 
             insertFunction = new InsertFunction();
-            
+
             rand = new Random();
 
             isNoiseEnabled = insertFunction.checkBox1.Checked;
-            noise = (float)(insertFunction.trackBar1.Value*rand.NextDouble());
-
+            noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
 
             xInput.Maximum = decimal.MaxValue;
             xInput.Minimum = decimal.MinValue;
@@ -68,17 +61,11 @@ namespace Kozelites
             toolTip1.SetToolTip(button1, $"Menj a {tabPage3.Name} fülre");
             toolTip2.SetToolTip(HeatmapCheck, $"Menj a {tabPage2.Name} fülre");
 
-
             ShowA0A1.Text = $"a0: 0,     a1: 0";
 
 
             maxIter = (int)insertFunction.MaxIterations.Value;
 
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
 
         }
 
@@ -205,8 +192,8 @@ namespace Kozelites
 
             n = pontok.Count;
 
-            a0 = (x2sum * ysum - xsum * xysum) / (n * x2sum - (xsum*xsum));
-            a1 = (n * xysum - xsum * ysum) / (n * x2sum - (xsum*xsum));
+            a0 = (x2sum * ysum - xsum * xysum) / (n * x2sum - (xsum * xsum));
+            a1 = (n * xysum - xsum * ysum) / (n * x2sum - (xsum * xsum));
 
             ShowA0A1.Text = $"a0: {a0},     a1: {a1}";
 
@@ -229,12 +216,11 @@ namespace Kozelites
 
         private LinePlot CalculateLinRegression()
         {
-            
             // Start és end koordináták az egyeneshez
-            double startX = minX;
-            double startY = a1 * minX + a0;
 
+            double startX = minX;
             double endX = maxX;
+            double startY = a1 * minX + a0;
             double endY = a1 * maxX + a0;
 
             Debug.WriteLine($"Line start: ({startX}, {startY}) end: ({endX}, {endY})");
@@ -286,7 +272,7 @@ namespace Kozelites
 
             using (Graphics g = Graphics.FromImage(bitmap))
             {
-                g.Clear(Color.White);
+                g.Clear(Color.WhiteSmoke);
                 float size = 20f;
                 float radius = size / 2;
 
@@ -301,9 +287,6 @@ namespace Kozelites
                 bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 bitmap.Save("heatmap.bmp");
                 Debug.WriteLine("Heatmap saved as heatmap.bmp");
-                BlurHeatmap(bitmap);
-                bitmap.Save("heatmap.bmp");
-                Debug.WriteLine("Heatmap saved as heatmap.bmp");
 
                 pictureBox1.BackgroundImage = bitmap;
             }
@@ -312,9 +295,47 @@ namespace Kozelites
 
         private Color GetHeatmapColor(float error, float min, float max)
         {
+            // a hiba hozzárendeélése a színhez HSV színtérben
+            float hue = (error - min) / (max - min) * 360;
+            float saturation = 1.0f; // Full saturation
+            float value = 1.0f; // Full brightness
+
+            // Convert HSV to RGB
+            return ColorFromHSV(hue, saturation, value);
+        }
+
+        private Color ColorFromHSV(float hue, float saturation, float value)
+        {
+            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+            float f = hue / 60 - (float)Math.Floor(hue / 60);
+
+            value = value * 255;
+            int v = Convert.ToInt32(value);
+            int p = Convert.ToInt32(value * (1 - saturation));
+            int q = Convert.ToInt32(value * (1 - f * saturation));
+            int t = Convert.ToInt32(value * (1 - (1 - f) * saturation));
+
+            if (hi == 0)
+                return Color.FromArgb(255, v, t, p);
+            else if (hi == 1)
+                return Color.FromArgb(255, q, v, p);
+            else if (hi == 2)
+                return Color.FromArgb(255, p, v, t);
+            else if (hi == 3)
+                return Color.FromArgb(255, p, q, v);
+            else if (hi == 4)
+                return Color.FromArgb(255, t, p, v);
+            else
+                return Color.FromArgb(255, v, p, q);
+        }
+
+        [Obsolete("Rbg színtér nem felelt meg a színinterpolációnak", true)]
+        private Color GetHeatmapColora(float error, float min, float max)
+        {
             int r = 0;
             int g = 0;
             int b = 0;
+
             if (error == min)
             {
                 r = 0;
@@ -330,64 +351,21 @@ namespace Kozelites
             else
             {
                 float ratio = (error - min) / (max - min);
-                r = Math.Clamp((int)((1 - ratio) * 255), 0, 255);
-                g = Math.Clamp((int)((1 - ratio) * 255), 0, 255);
+                if (Math.Abs(min - error) / ratio < Math.Abs(max - error) / ratio)
+                {
+                    g = Math.Clamp((int)((1 - ratio * 2) * 255), 0, 255);
+                    r = Math.Clamp((int)((1 - ratio) * 255), 0, 255);
+                }
+                else
+                {
+                    r = Math.Clamp((int)((1 - ratio * 2) * 255), 0, 255);
+                    g = Math.Clamp((int)((1 - ratio) * 255), 0, 255);
+                }
+
+
                 return Color.FromArgb(128, r, g, b);
             }
         }
-
-        private void BlurHeatmap(Bitmap bitmap)
-        {
-            Bitmap tempBitmap = new Bitmap(bitmap);
-
-            for (int i = 1; i < bitmap.Width - 1; i++)
-            {
-                for (int j = 1; j < bitmap.Height - 1; j++)
-                {
-                    Color currentColor = bitmap.GetPixel(i, j);
-                    if (currentColor != Color.FromArgb(0,0,0))
-                    {
-                        bitmap.SetPixel(i, j, GetBlurredColor(bitmap,i,j));
-
-                    }
-                }
-            }
-        }
-
-        private Color GetBlurredColor(Bitmap bitmap, int x, int y)
-        {
-            int r = 0, g = 0, b = 0;
-
-            int[,] gaussKernel = new int[,]
-            {
-                {1, 4, 7, 4, 1},
-                {4, 16, 26, 16, 4},
-                {7, 26, 41, 26, 7},
-                {4, 16, 26, 16, 4},
-                {1, 4, 7, 4, 1}
-            };
-
-            int kernelSum = 273; // Sum of all kernel values
-
-            // Iterate over the 5x5 area around the pixel
-            for (int dx = -2; dx <= 2; dx++)
-            {
-                for (int dy = -2; dy <= 2; dy++)
-                {
-                    int kernelValue = gaussKernel[dx + 2, dy + 2];
-                    int neighborX = Math.Clamp(x + dx, 0, bitmap.Width - 1);
-                    int neighborY = Math.Clamp(y + dy, 0, bitmap.Height - 1);
-                    Color neighborColor = bitmap.GetPixel(neighborX, neighborY);
-                    r += neighborColor.R * kernelValue;
-                    g += neighborColor.G * kernelValue;
-                    b += neighborColor.B * kernelValue;
-                }
-            }
-
-            // Average the colors
-            return Color.FromArgb(r / kernelSum, g / kernelSum, b / kernelSum);
-        }
-
 
         private void show_LinRegress_CheckedChanged(object sender, EventArgs e)
         {
@@ -400,7 +378,7 @@ namespace Kozelites
             else
             {
                 CalculateLinRegression();
-               
+
             }
         }
 
@@ -435,7 +413,7 @@ namespace Kozelites
 
         private void AbsPonts()
         {
-           
+
             if (isNoiseEnabled)
             {
                 for (int i = maxIter; i > -1; i--)
@@ -461,7 +439,7 @@ namespace Kozelites
                     }
                 }
             }
-            
+
         }
 
         private void Logaritmic()
@@ -471,7 +449,7 @@ namespace Kozelites
                 for (int i = 1; i < maxIter; i++)
                 {
                     noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
-                    AddPont(i, (float)Math.Log(i+noise));
+                    AddPont(i, (float)Math.Log(i + noise));
                 }
             }
             else
@@ -482,7 +460,7 @@ namespace Kozelites
                 }
             }
 
-           
+
         }
 
         private void Exponencialis()
@@ -492,7 +470,7 @@ namespace Kozelites
                 for (int i = 1; i < maxIter; i++)
                 {
                     noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
-                    AddPont(i, (float)Math.Exp(i+ noise));
+                    AddPont(i, (float)Math.Exp(i + noise));
                 }
             }
             else
@@ -502,96 +480,72 @@ namespace Kozelites
                     AddPont(i, (float)Math.Exp(i));
                 }
             }
-            
+
+        }
+
+        private void Hatvany(float fokszam)
+        {
+            if (isNoiseEnabled)
+            {
+                for (int i = -maxIter; i < maxIter+1; i++)
+                {
+                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                    AddPont(i, (float)Math.Pow(i + noise, fokszam));
+                }
+            }
+            else
+            {
+                for (int i = -maxIter; i < maxIter+1; i++)
+                {
+                    AddPont(i, (float)Math.Pow(i, fokszam));
+                }
+            }
+
+        }
+
+        private void Hanyados()
+        {
+            if (isNoiseEnabled)
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                    AddPont(i, (float)1 / i+noise);
+                }
+            }
+            else
+            {
+                for (int i = 1; i < maxIter; i++)
+                {
+                    AddPont(i, (float)1/i);
+                }
+            }
         }
 
         private void Gyok()
         {
             if (isNoiseEnabled)
             {
-                for (int i = 1; i < maxIter; i++)
+                for (int i = 0; i < maxIter; i++)
                 {
                     noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
-                    AddPont(i, (float)Math.Sqrt(i+ noise));
+                    AddPont(i, (float)Math.Sqrt(i + noise));
                 }
             }
-            else 
+            else
             {
-                for (int i = 1; i < maxIter; i++)
+                for (int i = 0; i < maxIter; i++)
                 {
                     AddPont(i, (float)Math.Sqrt(i));
                 }
             }
-           
-        }
-
-        private void Harmadfoku()
-        {
-            if (isNoiseEnabled)
-            {
-                for (int i = -maxIter; i < maxIter; i++)
-                {
-                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
-                    AddPont(i, (float)Math.Pow(i+noise, 3));
-                }
-            }
-            else
-            {
-                for (int i = -maxIter; i < maxIter; i++)
-                {
-                    AddPont(i, (float)Math.Pow(i, 3));
-                }
-            }
-            
-        }
-
-
-        private void Masodfoku()
-        {
-            if (isNoiseEnabled)
-            {
-                for (int i = -maxIter; i < maxIter + 1; i++)
-                {
-                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
-                    AddPont(i, (float)Math.Pow(i+noise, 2));
-                }
-            }
-            else
-            {
-                for (int i = -maxIter; i < maxIter + 1; i++)
-                {
-                    AddPont(i, (float)Math.Pow(i, 2));
-                }
-            }
-           
         }
 
         private void Sinus()
         {
             if (isNoiseEnabled)
             {
-                for (int i = 1; i < maxIter; i++)
-                {
-                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
-                    AddPont(i, (float)Math.Sin(i+noise));
-                }
-            }
-            else
-            {
-                for (int i = 1; i < maxIter; i++)
-                {
-                    AddPont(i, (float)Math.Sin(i));
-                }
-            }   
-
-           
-        }
-
-        private void Cosinus()
-        {
-            if (isNoiseEnabled)
-            {
-                for (int i = 1; i < maxIter; i++)
+                for (int i = 0; i < maxIter; i++)
                 {
                     noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
                     AddPont(i, (float)Math.Sin(i + noise));
@@ -599,7 +553,28 @@ namespace Kozelites
             }
             else
             {
-                for (int i = 1; i < maxIter; i++)
+                for (int i = 0; i < maxIter; i++)
+                {
+                    AddPont(i, (float)Math.Sin(i));
+                }
+            }
+
+
+        }
+
+        private void Cosinus()
+        {
+            if (isNoiseEnabled)
+            {
+                for (int i = 0; i < maxIter; i++)
+                {
+                    noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                    AddPont(i, (float)Math.Sin(i + noise));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < maxIter; i++)
                 {
                     AddPont(i, (float)Math.Cos(i));
                 }
@@ -616,7 +591,10 @@ namespace Kozelites
 
             if (insertFunction.DialogResult == DialogResult.OK)
             {
-                string selectedFunction = insertFunction.FunctionsList.SelectedItem.ToString();
+                selectedFunction = insertFunction.FunctionsList.SelectedItem.ToString();
+                maxIter = (int)insertFunction.MaxIterations.Value;
+                isNoiseEnabled = insertFunction.checkBox1.Checked;
+                noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
 
                 if (string.IsNullOrEmpty(selectedFunction))
                 {
@@ -624,54 +602,59 @@ namespace Kozelites
                     return;
                 }
 
-                isNoiseEnabled = insertFunction.checkBox1.Checked;
-                noise = (float)(insertFunction.trackBar1.Value * rand.NextDouble());
+                
 
                 switch (selectedFunction)
                 {
-                case "Sin":
-                    Sinus();
-                    break;
+                    case "Sin":
+                        Sinus();
+                        break;
 
-                case "Cos":
-                    Cosinus();
-                    break;
+                    case "Cos":
+                        Cosinus();
+                        break;
 
-                case "Másodfokú":
-                    Masodfoku();
-                    break;
+                    case "Hányados":
+                        Hanyados();
+                        break;
 
-                case "Harmadfokú":
-                    Harmadfoku();
-                    break;
+                    case "Másodfokú":
+                        Hatvany(2);
+                        break;
 
-                case "Gyök":
-                    Gyok();
-                    break;
+                    case "Harmadfokú":
+                        Hatvany(3);
+                        break;
 
-                case "Exponenciális":
-                    Exponencialis();
-                    break;
+                    case "Gyök":
+                        Gyok(); // Próbáltam hatvány (1/2) és hatvány 0.5-öt is, de nem mûködött
+                        break;
 
-                case "Logaritmus":
-                    Logaritmic();
-                    break;
+                    case "Exponenciális":
+                        Exponencialis();
+                        break;
 
-                case "Abszolútérték":
-                    AbsPonts();
-                    break;
+                    case "Logaritmus":
+                        Logaritmic();
+                        break;
 
-                case "Véletlenszerû":
-                    RandomPonts();
-                    break;
+                    case "Abszolútérték":
+                        AbsPonts();
+                        break;
 
-                default:
-                    MessageBox.Show("Ismeretlen függvény", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
-            }
+                    case "Véletlenszerû":
+                        RandomPonts();
+                        break;
+
+                    default:
+                        MessageBox.Show("Ismeretlen függvény", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                }
 
             }
         }
+
+       
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -682,10 +665,7 @@ namespace Kozelites
             UpdatePlot();
         }
 
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-            maxIter = (int)insertFunction.MaxIterations.Value;
-        }
+
     }
 }
 

@@ -76,7 +76,7 @@
             // FunctionsList
             // 
             FunctionsList.FormattingEnabled = true;
-            FunctionsList.Items.AddRange(new object[] { "Sin", "Cos", "Másodfokú", "Harmadfokú", "Gyök", "Exponenciális", "Logaritmus", "Abszolútérték", "Véletlenszerű" });
+            FunctionsList.Items.AddRange(new object[] { "Sin", "Cos", "Hányados", "Másodfokú", "Harmadfokú", "Gyök", "Exponenciális", "Logaritmus", "Abszolútérték", "Véletlenszerű" });
             FunctionsList.Location = new Point(3, 3);
             FunctionsList.Name = "FunctionsList";
             FunctionsList.Size = new Size(366, 23);
