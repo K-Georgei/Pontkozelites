@@ -10,6 +10,7 @@ namespace Kozelites
 {
     public class Pont2D
     {
+        [System.ComponentModel.Browsable(false)]
         public string Name { get; set; }
         public float X { get; set; }
         public float Y { get; set; }
@@ -17,6 +18,8 @@ namespace Kozelites
         public float XY { get; set; }
 
         public static int counter = 0; // Statikus számláló az összes példányhoz
+        
+        [System.ComponentModel.Browsable(false)]
         public Color PointColor { get; set; } // New property for color
 
 

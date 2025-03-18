@@ -2,6 +2,7 @@ using ScottPlot;
 using ScottPlot.Plottables;
 using System.ComponentModel;
 using System.Diagnostics;
+using static System.Windows.Forms.AxHost;
 using Color = System.Drawing.Color;
 
 namespace Kozelites
@@ -223,24 +224,22 @@ namespace Kozelites
             double startY = a1 * minX + a0;
             double endY = a1 * maxX + a0;
 
-            Debug.WriteLine($"Line start: ({startX}, {startY}) end: ({endX}, {endY})");
 
             // ScottPlot vonal rajzolása
-            LinePlot line = formsPlot1.Plot.Add.Line(
+            /*LinePlot line = formsPlot1.Plot.Add.Line(
                 x1: startX,
                 y1: startY,
                 x2: endX,
                 y2: endY
-            );
+            );*/
 
-            // Stílus beállítások
-            ScottPlot.Colormaps.Viridis colormap = new();
-            line.Color = Generate.RandomColor(colormap);
-            line.LineWidth = 2;
-            line.LinePattern = LinePattern.Solid;
+            LinePlot line = new LinePlot() 
+            {
+                Start = new Coordinates((float)startX, (float)startY),
+                End = new Coordinates((float)endX, (float)endY),
+                
 
-            // Frissítés
-            formsPlot1.Refresh();
+            };
             return line;
 
         }
@@ -272,7 +271,7 @@ namespace Kozelites
 
             using (Graphics g = Graphics.FromImage(bitmap))
             {
-                g.Clear(Color.WhiteSmoke);
+                g.Clear(Color.FromArgb(255,64,64,64));
                 float size = 20f;
                 float radius = size / 2;
 
@@ -295,17 +294,32 @@ namespace Kozelites
 
         private Color GetHeatmapColor(float error, float min, float max)
         {
-            // a hiba hozzárendeélése a színhez HSV színtérben
-            float hue = (error - min) / (max - min) * 360;
-            float saturation = 1.0f; // Full saturation
-            float value = 1.0f; // Full brightness
+            // Ha error pontosan a minimum, akkor zöld (HSV: hue = 120°)
+            if (error == min)
+                return ColorFromHSV(120, 1.0f, 1.0f); 
 
-            // Convert HSV to RGB
-            return ColorFromHSV(hue, saturation, value);
+            if (error == max)
+                return ColorFromHSV(0, 1.0f, 1.0f);
+
+            float ratio = (error - min) / (max - min);
+
+            if (Math.Abs(min - error) < Math.Abs(max - error))
+            {
+                float newRatio = ratio / 0.5f; 
+                float hue = 120 - newRatio * 60; 
+                return ColorFromHSV(hue, 1.0f, 1.0f);
+            }
+            else
+            {
+                float newRatio = (ratio - 0.5f) / 0.5f; 
+                float hue = 60 - newRatio * 60; 
+                return ColorFromHSV(hue, 1.0f, 1.0f);
+            }
         }
 
         private Color ColorFromHSV(float hue, float saturation, float value)
         {
+            //HSV-bõl RGB-be.
             int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
             float f = hue / 60 - (float)Math.Floor(hue / 60);
 
@@ -315,19 +329,18 @@ namespace Kozelites
             int q = Convert.ToInt32(value * (1 - f * saturation));
             int t = Convert.ToInt32(value * (1 - (1 - f) * saturation));
 
-            if (hi == 0)
-                return Color.FromArgb(255, v, t, p);
-            else if (hi == 1)
-                return Color.FromArgb(255, q, v, p);
-            else if (hi == 2)
-                return Color.FromArgb(255, p, v, t);
-            else if (hi == 3)
-                return Color.FromArgb(255, p, q, v);
-            else if (hi == 4)
-                return Color.FromArgb(255, t, p, v);
-            else
-                return Color.FromArgb(255, v, p, q);
+            return hi switch
+            {
+                0 => Color.FromArgb(255, v, t, p),
+                1 => Color.FromArgb(255, q, v, p),
+                2 => Color.FromArgb(255, p, v, t),
+                3 => Color.FromArgb(255, p, q, v),
+                4 => Color.FromArgb(255, t, p, v),
+                _ => Color.FromArgb(255, v, p, q),
+            };
         }
+
+
 
         [Obsolete("Rbg színtér nem felelt meg a színinterpolációnak", true)]
         private Color GetHeatmapColora(float error, float min, float max)
@@ -375,11 +388,38 @@ namespace Kozelites
                 show_LinRegress.Checked = false;
                 refreshGraph(pontok.ToList());
             }
+            else if (!show_LinRegress.Checked)
+            {
+                refreshGraph(pontok.ToList());
+            }
             else
             {
-                CalculateLinRegression();
+
+                
+                var line = CalculateLinRegression();
+                ScottPlot.Colormaps.Viridis colormap = new();
+
+                LinePlot a = formsPlot1.Plot.Add.Line
+                (
+                    x1: line.Start.X,
+                    y1: line.Start.Y,
+                    x2: line.End.X,
+                    y2: line.End.Y
+                    
+                );
+
+                a.Color = Generate.RandomColor(colormap);
+                a.LineWidth = 2;
+                a.LinePattern = LinePattern.Solid;
+
+                Debug.WriteLine($"Line start: ({line.Start.X}, {line.Start.Y}) end: ({line.End.X}, {line.End.Y})");
+
+
+                //refreshGraph(pontok.ToList());
+                formsPlot1.Refresh();
 
             }
+
         }
 
         private void HeatmapCheck_CheckedChanged(object sender, EventArgs e)
@@ -393,6 +433,11 @@ namespace Kozelites
             {
                 Heatmap(CalculateLinRegression());
                 tabControl1.SelectedTab = tabPage2;
+            }
+            else
+            {
+                refreshGraph(pontok.ToList());
+
             }
         }
 
