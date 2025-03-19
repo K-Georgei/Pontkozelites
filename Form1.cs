@@ -24,7 +24,6 @@ namespace Kozelites
         public float maxX;
         public float maxY;
 
-
         public float a0;
         public float a1;
 
@@ -35,7 +34,6 @@ namespace Kozelites
         public bool isNoiseEnabled;
         public float noise;
         public int maxIter;
-
 
 
         public Form1()

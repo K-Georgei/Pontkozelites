@@ -32,18 +32,29 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             dataGridView1 = new DataGridView();
             tableLayoutPanel2 = new TableLayoutPanel();
-            btn_addPont = new Button();
             flowLayoutPanel2 = new FlowLayoutPanel();
             label2 = new Label();
             yInput = new NumericUpDown();
             flowLayoutPanel1 = new FlowLayoutPanel();
             label1 = new Label();
             xInput = new NumericUpDown();
+            flowLayoutPanel8 = new FlowLayoutPanel();
+            label9 = new Label();
+            zInput = new NumericUpDown();
+            flowLayoutPanel9 = new FlowLayoutPanel();
+            btn_addPont = new Button();
             btn_removePont = new Button();
+            panel2 = new Panel();
+            tableLayoutPanel4 = new TableLayoutPanel();
+            numericUpDown1 = new NumericUpDown();
+            label10 = new Label();
+            radioButton1 = new RadioButton();
+            radioButton2 = new RadioButton();
             flowLayoutPanel3 = new FlowLayoutPanel();
             checkBox2 = new CheckBox();
             show_LinRegress = new CheckBox();
             HeatmapCheck = new CheckBox();
+            Enable3D = new CheckBox();
             groupBox1 = new GroupBox();
             flowLayoutPanel7 = new FlowLayoutPanel();
             Scatter_points = new Button();
@@ -74,10 +85,6 @@
             toolTip1 = new ToolTip(components);
             toolTip2 = new ToolTip(components);
             toolTip3 = new ToolTip(components);
-            flowLayoutPanel8 = new FlowLayoutPanel();
-            label9 = new Label();
-            zInput = new NumericUpDown();
-            Enable3D = new CheckBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tableLayoutPanel2.SuspendLayout();
@@ -85,6 +92,12 @@
             ((System.ComponentModel.ISupportInitialize)yInput).BeginInit();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)xInput).BeginInit();
+            flowLayoutPanel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)zInput).BeginInit();
+            flowLayoutPanel9.SuspendLayout();
+            panel2.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             flowLayoutPanel3.SuspendLayout();
             groupBox1.SuspendLayout();
             flowLayoutPanel7.SuspendLayout();
@@ -100,15 +113,13 @@
             ((System.ComponentModel.ISupportInitialize)SolveForX_numeric).BeginInit();
             flowLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SolveForY_numeric).BeginInit();
-            flowLayoutPanel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)zInput).BeginInit();
             SuspendLayout();
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 36.2381363F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 63.7618637F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 41.67386F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 58.32614F));
             tableLayoutPanel1.Controls.Add(dataGridView1, 0, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
             tableLayoutPanel1.Controls.Add(flowLayoutPanel3, 1, 1);
@@ -118,8 +129,8 @@
             tableLayoutPanel1.Margin = new Padding(10);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 80.7771F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 19.2229042F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 76.95238F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 23.0476189F));
             tableLayoutPanel1.Size = new Size(1159, 525);
             tableLayoutPanel1.TabIndex = 1;
             // 
@@ -130,48 +141,37 @@
             dataGridView1.Location = new Point(3, 3);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(414, 418);
+            dataGridView1.Size = new Size(477, 398);
             dataGridView1.TabIndex = 0;
             // 
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.ColumnCount = 3;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 136F));
-            tableLayoutPanel2.Controls.Add(btn_addPont, 0, 0);
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
             tableLayoutPanel2.Controls.Add(flowLayoutPanel2, 1, 1);
             tableLayoutPanel2.Controls.Add(flowLayoutPanel1, 0, 1);
-            tableLayoutPanel2.Controls.Add(btn_removePont, 1, 0);
             tableLayoutPanel2.Controls.Add(flowLayoutPanel8, 2, 1);
+            tableLayoutPanel2.Controls.Add(flowLayoutPanel9, 0, 0);
+            tableLayoutPanel2.Controls.Add(panel2, 1, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(3, 427);
+            tableLayoutPanel2.Location = new Point(3, 407);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 2;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Size = new Size(414, 95);
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            tableLayoutPanel2.Size = new Size(477, 115);
             tableLayoutPanel2.TabIndex = 1;
-            // 
-            // btn_addPont
-            // 
-            btn_addPont.Dock = DockStyle.Fill;
-            btn_addPont.Location = new Point(3, 3);
-            btn_addPont.Name = "btn_addPont";
-            btn_addPont.Size = new Size(133, 41);
-            btn_addPont.TabIndex = 0;
-            btn_addPont.Text = "Hozzáadás";
-            btn_addPont.UseVisualStyleBackColor = true;
-            btn_addPont.Click += btn_addPont_Click;
             // 
             // flowLayoutPanel2
             // 
             flowLayoutPanel2.Controls.Add(label2);
             flowLayoutPanel2.Controls.Add(yInput);
             flowLayoutPanel2.Dock = DockStyle.Fill;
-            flowLayoutPanel2.Location = new Point(142, 50);
+            flowLayoutPanel2.Location = new Point(161, 72);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new Size(133, 42);
+            flowLayoutPanel2.Size = new Size(153, 40);
             flowLayoutPanel2.TabIndex = 3;
             // 
             // label2
@@ -185,7 +185,7 @@
             // 
             // yInput
             // 
-            yInput.Location = new Point(3, 18);
+            yInput.Location = new Point(26, 3);
             yInput.Name = "yInput";
             yInput.Size = new Size(120, 23);
             yInput.TabIndex = 4;
@@ -195,9 +195,9 @@
             flowLayoutPanel1.Controls.Add(label1);
             flowLayoutPanel1.Controls.Add(xInput);
             flowLayoutPanel1.Dock = DockStyle.Fill;
-            flowLayoutPanel1.Location = new Point(3, 50);
+            flowLayoutPanel1.Location = new Point(3, 72);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(133, 42);
+            flowLayoutPanel1.Size = new Size(152, 40);
             flowLayoutPanel1.TabIndex = 2;
             // 
             // label1
@@ -211,21 +211,136 @@
             // 
             // xInput
             // 
-            xInput.Location = new Point(3, 18);
+            xInput.Location = new Point(26, 3);
             xInput.Name = "xInput";
             xInput.Size = new Size(120, 23);
             xInput.TabIndex = 4;
             // 
+            // flowLayoutPanel8
+            // 
+            flowLayoutPanel8.Controls.Add(label9);
+            flowLayoutPanel8.Controls.Add(zInput);
+            flowLayoutPanel8.Dock = DockStyle.Fill;
+            flowLayoutPanel8.Location = new Point(320, 72);
+            flowLayoutPanel8.Name = "flowLayoutPanel8";
+            flowLayoutPanel8.Size = new Size(154, 40);
+            flowLayoutPanel8.TabIndex = 6;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(3, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(17, 15);
+            label9.TabIndex = 3;
+            label9.Text = "Z:";
+            // 
+            // zInput
+            // 
+            zInput.Location = new Point(26, 3);
+            zInput.Name = "zInput";
+            zInput.Size = new Size(120, 23);
+            zInput.TabIndex = 4;
+            // 
+            // flowLayoutPanel9
+            // 
+            flowLayoutPanel9.Controls.Add(btn_addPont);
+            flowLayoutPanel9.Controls.Add(btn_removePont);
+            flowLayoutPanel9.Dock = DockStyle.Fill;
+            flowLayoutPanel9.Location = new Point(3, 3);
+            flowLayoutPanel9.Name = "flowLayoutPanel9";
+            flowLayoutPanel9.Size = new Size(152, 63);
+            flowLayoutPanel9.TabIndex = 7;
+            // 
+            // btn_addPont
+            // 
+            btn_addPont.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            btn_addPont.ForeColor = Color.ForestGreen;
+            btn_addPont.Location = new Point(3, 3);
+            btn_addPont.Name = "btn_addPont";
+            btn_addPont.Size = new Size(40, 40);
+            btn_addPont.TabIndex = 0;
+            btn_addPont.Text = "+";
+            btn_addPont.UseVisualStyleBackColor = true;
+            btn_addPont.Click += btn_addPont_Click;
+            // 
             // btn_removePont
             // 
-            btn_removePont.Dock = DockStyle.Fill;
-            btn_removePont.Location = new Point(142, 3);
+            btn_removePont.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            btn_removePont.ForeColor = Color.FromArgb(192, 0, 0);
+            btn_removePont.Location = new Point(49, 3);
             btn_removePont.Name = "btn_removePont";
-            btn_removePont.Size = new Size(133, 41);
+            btn_removePont.Size = new Size(40, 40);
             btn_removePont.TabIndex = 5;
-            btn_removePont.Text = "Eltávolítás";
+            btn_removePont.Text = "-";
             btn_removePont.UseVisualStyleBackColor = true;
             btn_removePont.Click += btn_removePont_Click;
+            // 
+            // panel2
+            // 
+            tableLayoutPanel2.SetColumnSpan(panel2, 2);
+            panel2.Controls.Add(tableLayoutPanel4);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(161, 3);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(313, 63);
+            panel2.TabIndex = 10;
+            // 
+            // tableLayoutPanel4
+            // 
+            tableLayoutPanel4.ColumnCount = 2;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.Controls.Add(numericUpDown1, 1, 1);
+            tableLayoutPanel4.Controls.Add(label10, 0, 1);
+            tableLayoutPanel4.Controls.Add(radioButton1, 0, 0);
+            tableLayoutPanel4.Controls.Add(radioButton2, 1, 0);
+            tableLayoutPanel4.Dock = DockStyle.Fill;
+            tableLayoutPanel4.Location = new Point(0, 0);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.RowCount = 2;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.Size = new Size(313, 63);
+            tableLayoutPanel4.TabIndex = 4;
+            // 
+            // numericUpDown1
+            // 
+            numericUpDown1.Location = new Point(159, 34);
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(120, 23);
+            numericUpDown1.TabIndex = 4;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(3, 31);
+            label10.Name = "label10";
+            label10.Size = new Size(56, 15);
+            label10.TabIndex = 3;
+            label10.Text = "Fokszám:";
+            // 
+            // radioButton1
+            // 
+            radioButton1.AutoSize = true;
+            radioButton1.Location = new Point(3, 3);
+            radioButton1.Name = "radioButton1";
+            radioButton1.Size = new Size(123, 19);
+            radioButton1.TabIndex = 0;
+            radioButton1.TabStop = true;
+            radioButton1.Text = "Lineáris Regresszió";
+            radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            radioButton2.AutoSize = true;
+            radioButton2.Location = new Point(159, 3);
+            radioButton2.Name = "radioButton2";
+            radioButton2.Size = new Size(148, 19);
+            radioButton2.TabIndex = 1;
+            radioButton2.TabStop = true;
+            radioButton2.Text = "Polinomiális Regresszió";
+            radioButton2.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel3
             // 
@@ -235,9 +350,9 @@
             flowLayoutPanel3.Controls.Add(Enable3D);
             flowLayoutPanel3.Controls.Add(groupBox1);
             flowLayoutPanel3.Dock = DockStyle.Fill;
-            flowLayoutPanel3.Location = new Point(423, 427);
+            flowLayoutPanel3.Location = new Point(486, 407);
             flowLayoutPanel3.Name = "flowLayoutPanel3";
-            flowLayoutPanel3.Size = new Size(733, 95);
+            flowLayoutPanel3.Size = new Size(670, 115);
             flowLayoutPanel3.TabIndex = 2;
             // 
             // checkBox2
@@ -272,6 +387,17 @@
             HeatmapCheck.UseVisualStyleBackColor = true;
             HeatmapCheck.CheckedChanged += HeatmapCheck_CheckedChanged;
             // 
+            // Enable3D
+            // 
+            Enable3D.AutoSize = true;
+            Enable3D.Location = new Point(510, 3);
+            Enable3D.Name = "Enable3D";
+            Enable3D.Size = new Size(119, 19);
+            Enable3D.TabIndex = 9;
+            Enable3D.Text = "3D engedélyezése";
+            Enable3D.UseVisualStyleBackColor = true;
+            Enable3D.CheckedChanged += Enable3D_CheckedChanged;
+            // 
             // groupBox1
             // 
             groupBox1.Controls.Add(flowLayoutPanel7);
@@ -281,13 +407,13 @@
             groupBox1.Size = new Size(415, 52);
             groupBox1.TabIndex = 8;
             groupBox1.TabStop = false;
-            groupBox1.Text = "groupBox1";
+            groupBox1.Text = "Függvény műveletek";
             // 
             // flowLayoutPanel7
             // 
             flowLayoutPanel7.Controls.Add(Scatter_points);
-            flowLayoutPanel7.Controls.Add(button1);
             flowLayoutPanel7.Controls.Add(button2);
+            flowLayoutPanel7.Controls.Add(button1);
             flowLayoutPanel7.Dock = DockStyle.Fill;
             flowLayoutPanel7.Location = new Point(3, 19);
             flowLayoutPanel7.Name = "flowLayoutPanel7";
@@ -306,7 +432,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(139, 3);
+            button1.Location = new Point(279, 3);
             button1.Name = "button1";
             button1.Size = new Size(102, 23);
             button1.TabIndex = 4;
@@ -316,7 +442,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(247, 3);
+            button2.Location = new Point(139, 3);
             button2.Name = "button2";
             button2.Size = new Size(134, 23);
             button2.TabIndex = 7;
@@ -328,9 +454,9 @@
             // 
             panel1.Controls.Add(tabControl1);
             panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(423, 3);
+            panel1.Location = new Point(486, 3);
             panel1.Name = "panel1";
-            panel1.Size = new Size(733, 418);
+            panel1.Size = new Size(670, 398);
             panel1.TabIndex = 3;
             // 
             // tabControl1
@@ -342,7 +468,7 @@
             tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(733, 418);
+            tabControl1.Size = new Size(670, 398);
             tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -351,7 +477,7 @@
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(725, 390);
+            tabPage1.Size = new Size(662, 370);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Grafikon";
             tabPage1.UseVisualStyleBackColor = true;
@@ -362,7 +488,7 @@
             formsPlot1.Dock = DockStyle.Fill;
             formsPlot1.Location = new Point(3, 3);
             formsPlot1.Name = "formsPlot1";
-            formsPlot1.Size = new Size(719, 384);
+            formsPlot1.Size = new Size(656, 364);
             formsPlot1.TabIndex = 3;
             formsPlot1.MouseDown += formsPlot1_MouseDown;
             // 
@@ -372,7 +498,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(725, 390);
+            tabPage2.Size = new Size(662, 370);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Heatmap";
             tabPage2.UseVisualStyleBackColor = true;
@@ -383,7 +509,7 @@
             pictureBox1.Dock = DockStyle.Fill;
             pictureBox1.Location = new Point(3, 3);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(719, 384);
+            pictureBox1.Size = new Size(656, 364);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
@@ -394,7 +520,7 @@
             tabPage3.Location = new Point(4, 24);
             tabPage3.Name = "tabPage3";
             tabPage3.Padding = new Padding(3);
-            tabPage3.Size = new Size(725, 390);
+            tabPage3.Size = new Size(662, 370);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "(X;Y) értékre való megoldás";
             tabPage3.UseVisualStyleBackColor = true;
@@ -411,7 +537,7 @@
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.Size = new Size(719, 384);
+            tableLayoutPanel3.Size = new Size(656, 364);
             tableLayoutPanel3.TabIndex = 5;
             // 
             // flowLayoutPanel6
@@ -421,7 +547,7 @@
             flowLayoutPanel6.Dock = DockStyle.Fill;
             flowLayoutPanel6.Location = new Point(3, 3);
             flowLayoutPanel6.Name = "flowLayoutPanel6";
-            flowLayoutPanel6.Size = new Size(713, 186);
+            flowLayoutPanel6.Size = new Size(650, 176);
             flowLayoutPanel6.TabIndex = 5;
             // 
             // flowLayoutPanel4
@@ -536,47 +662,11 @@
             // 
             ShowA0A1.AutoSize = true;
             ShowA0A1.Dock = DockStyle.Top;
-            ShowA0A1.Location = new Point(3, 192);
+            ShowA0A1.Location = new Point(3, 182);
             ShowA0A1.Name = "ShowA0A1";
-            ShowA0A1.Size = new Size(713, 15);
+            ShowA0A1.Size = new Size(650, 15);
             ShowA0A1.TabIndex = 6;
             ShowA0A1.Text = "label7";
-            // 
-            // flowLayoutPanel8
-            // 
-            flowLayoutPanel8.Controls.Add(label9);
-            flowLayoutPanel8.Controls.Add(zInput);
-            flowLayoutPanel8.Location = new Point(281, 50);
-            flowLayoutPanel8.Name = "flowLayoutPanel8";
-            flowLayoutPanel8.Size = new Size(130, 42);
-            flowLayoutPanel8.TabIndex = 6;
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(3, 0);
-            label9.Name = "label9";
-            label9.Size = new Size(17, 15);
-            label9.TabIndex = 3;
-            label9.Text = "Z:";
-            // 
-            // zInput
-            // 
-            zInput.Location = new Point(3, 18);
-            zInput.Name = "zInput";
-            zInput.Size = new Size(120, 23);
-            zInput.TabIndex = 4;
-            // 
-            // Enable3D
-            // 
-            Enable3D.AutoSize = true;
-            Enable3D.Location = new Point(510, 3);
-            Enable3D.Name = "Enable3D";
-            Enable3D.Size = new Size(119, 19);
-            Enable3D.TabIndex = 9;
-            Enable3D.Text = "3D engedélyezése";
-            Enable3D.UseVisualStyleBackColor = true;
-            Enable3D.CheckedChanged += Enable3D_CheckedChanged;
             // 
             // Form1
             // 
@@ -595,6 +685,14 @@
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)xInput).EndInit();
+            flowLayoutPanel8.ResumeLayout(false);
+            flowLayoutPanel8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)zInput).EndInit();
+            flowLayoutPanel9.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            tableLayoutPanel4.ResumeLayout(false);
+            tableLayoutPanel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             flowLayoutPanel3.ResumeLayout(false);
             flowLayoutPanel3.PerformLayout();
             groupBox1.ResumeLayout(false);
@@ -614,9 +712,6 @@
             flowLayoutPanel5.ResumeLayout(false);
             flowLayoutPanel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)SolveForY_numeric).EndInit();
-            flowLayoutPanel8.ResumeLayout(false);
-            flowLayoutPanel8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)zInput).EndInit();
             ResumeLayout(false);
         }
 
@@ -671,5 +766,12 @@
         private Label label9;
         private NumericUpDown zInput;
         private CheckBox Enable3D;
+        private FlowLayoutPanel flowLayoutPanel9;
+        private RadioButton radioButton1;
+        private RadioButton radioButton2;
+        private Label label10;
+        private NumericUpDown numericUpDown1;
+        private Panel panel2;
+        private TableLayoutPanel tableLayoutPanel4;
     }
 }

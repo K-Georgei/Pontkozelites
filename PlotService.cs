@@ -45,6 +45,21 @@ namespace Kozelites
                 End = new Coordinates((float)endX, (float)endY),
             };
         }
+
+        public LinePlot CalculatePolinmialRegression(float minX, float maxX, float a0, float a1)
+        {
+            return null;
+        }
+
+        public static float Horner(float[] coefficients, float x)
+        {
+            float result = coefficients[0];
+            for (int i = 1; i < coefficients.Length; i++)
+            {
+                result = result * x + coefficients[i];
+            }
+            return result;
+        }
     }
 
 
