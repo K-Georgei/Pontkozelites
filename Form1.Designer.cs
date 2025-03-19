@@ -74,6 +74,10 @@
             toolTip1 = new ToolTip(components);
             toolTip2 = new ToolTip(components);
             toolTip3 = new ToolTip(components);
+            flowLayoutPanel8 = new FlowLayoutPanel();
+            label9 = new Label();
+            zInput = new NumericUpDown();
+            Enable3D = new CheckBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tableLayoutPanel2.SuspendLayout();
@@ -96,6 +100,8 @@
             ((System.ComponentModel.ISupportInitialize)SolveForX_numeric).BeginInit();
             flowLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SolveForY_numeric).BeginInit();
+            flowLayoutPanel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)zInput).BeginInit();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -129,13 +135,15 @@
             // 
             // tableLayoutPanel2
             // 
-            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel2.ColumnCount = 3;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 136F));
             tableLayoutPanel2.Controls.Add(btn_addPont, 0, 0);
             tableLayoutPanel2.Controls.Add(flowLayoutPanel2, 1, 1);
             tableLayoutPanel2.Controls.Add(flowLayoutPanel1, 0, 1);
             tableLayoutPanel2.Controls.Add(btn_removePont, 1, 0);
+            tableLayoutPanel2.Controls.Add(flowLayoutPanel8, 2, 1);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(3, 427);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -150,7 +158,7 @@
             btn_addPont.Dock = DockStyle.Fill;
             btn_addPont.Location = new Point(3, 3);
             btn_addPont.Name = "btn_addPont";
-            btn_addPont.Size = new Size(201, 41);
+            btn_addPont.Size = new Size(133, 41);
             btn_addPont.TabIndex = 0;
             btn_addPont.Text = "Hozzáadás";
             btn_addPont.UseVisualStyleBackColor = true;
@@ -161,9 +169,9 @@
             flowLayoutPanel2.Controls.Add(label2);
             flowLayoutPanel2.Controls.Add(yInput);
             flowLayoutPanel2.Dock = DockStyle.Fill;
-            flowLayoutPanel2.Location = new Point(210, 50);
+            flowLayoutPanel2.Location = new Point(142, 50);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new Size(201, 42);
+            flowLayoutPanel2.Size = new Size(133, 42);
             flowLayoutPanel2.TabIndex = 3;
             // 
             // label2
@@ -177,7 +185,7 @@
             // 
             // yInput
             // 
-            yInput.Location = new Point(26, 3);
+            yInput.Location = new Point(3, 18);
             yInput.Name = "yInput";
             yInput.Size = new Size(120, 23);
             yInput.TabIndex = 4;
@@ -189,7 +197,7 @@
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.Location = new Point(3, 50);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(201, 42);
+            flowLayoutPanel1.Size = new Size(133, 42);
             flowLayoutPanel1.TabIndex = 2;
             // 
             // label1
@@ -203,7 +211,7 @@
             // 
             // xInput
             // 
-            xInput.Location = new Point(26, 3);
+            xInput.Location = new Point(3, 18);
             xInput.Name = "xInput";
             xInput.Size = new Size(120, 23);
             xInput.TabIndex = 4;
@@ -211,9 +219,9 @@
             // btn_removePont
             // 
             btn_removePont.Dock = DockStyle.Fill;
-            btn_removePont.Location = new Point(210, 3);
+            btn_removePont.Location = new Point(142, 3);
             btn_removePont.Name = "btn_removePont";
-            btn_removePont.Size = new Size(201, 41);
+            btn_removePont.Size = new Size(133, 41);
             btn_removePont.TabIndex = 5;
             btn_removePont.Text = "Eltávolítás";
             btn_removePont.UseVisualStyleBackColor = true;
@@ -224,6 +232,7 @@
             flowLayoutPanel3.Controls.Add(checkBox2);
             flowLayoutPanel3.Controls.Add(show_LinRegress);
             flowLayoutPanel3.Controls.Add(HeatmapCheck);
+            flowLayoutPanel3.Controls.Add(Enable3D);
             flowLayoutPanel3.Controls.Add(groupBox1);
             flowLayoutPanel3.Dock = DockStyle.Fill;
             flowLayoutPanel3.Location = new Point(423, 427);
@@ -533,6 +542,42 @@
             ShowA0A1.TabIndex = 6;
             ShowA0A1.Text = "label7";
             // 
+            // flowLayoutPanel8
+            // 
+            flowLayoutPanel8.Controls.Add(label9);
+            flowLayoutPanel8.Controls.Add(zInput);
+            flowLayoutPanel8.Location = new Point(281, 50);
+            flowLayoutPanel8.Name = "flowLayoutPanel8";
+            flowLayoutPanel8.Size = new Size(130, 42);
+            flowLayoutPanel8.TabIndex = 6;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(3, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(17, 15);
+            label9.TabIndex = 3;
+            label9.Text = "Z:";
+            // 
+            // zInput
+            // 
+            zInput.Location = new Point(3, 18);
+            zInput.Name = "zInput";
+            zInput.Size = new Size(120, 23);
+            zInput.TabIndex = 4;
+            // 
+            // Enable3D
+            // 
+            Enable3D.AutoSize = true;
+            Enable3D.Location = new Point(510, 3);
+            Enable3D.Name = "Enable3D";
+            Enable3D.Size = new Size(119, 19);
+            Enable3D.TabIndex = 9;
+            Enable3D.Text = "3D engedélyezése";
+            Enable3D.UseVisualStyleBackColor = true;
+            Enable3D.CheckedChanged += Enable3D_CheckedChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -569,6 +614,9 @@
             flowLayoutPanel5.ResumeLayout(false);
             flowLayoutPanel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)SolveForY_numeric).EndInit();
+            flowLayoutPanel8.ResumeLayout(false);
+            flowLayoutPanel8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)zInput).EndInit();
             ResumeLayout(false);
         }
 
@@ -619,5 +667,9 @@
         private ToolTip toolTip3;
         private GroupBox groupBox1;
         private FlowLayoutPanel flowLayoutPanel7;
+        private FlowLayoutPanel flowLayoutPanel8;
+        private Label label9;
+        private NumericUpDown zInput;
+        private CheckBox Enable3D;
     }
 }
