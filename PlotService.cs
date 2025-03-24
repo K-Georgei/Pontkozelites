@@ -46,7 +46,7 @@ namespace Kozelites
             };
         }
 
-        public LinePlot CalculatePolinmialRegression(float minX, float maxX, float a0, float a1)
+        public LinePlot CalculatePolinmialRegression(float minX, float maxX, float a0, float a1, int fokszam)
         {
             return null;
         }

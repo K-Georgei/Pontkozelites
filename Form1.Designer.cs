@@ -46,7 +46,7 @@
             btn_removePont = new Button();
             panel2 = new Panel();
             tableLayoutPanel4 = new TableLayoutPanel();
-            numericUpDown1 = new NumericUpDown();
+            PoliFokSzam_num = new NumericUpDown();
             label10 = new Label();
             radioButton1 = new RadioButton();
             radioButton2 = new RadioButton();
@@ -58,8 +58,8 @@
             groupBox1 = new GroupBox();
             flowLayoutPanel7 = new FlowLayoutPanel();
             Scatter_points = new Button();
-            button1 = new Button();
             button2 = new Button();
+            button1 = new Button();
             panel1 = new Panel();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
@@ -97,7 +97,7 @@
             flowLayoutPanel9.SuspendLayout();
             panel2.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)PoliFokSzam_num).BeginInit();
             flowLayoutPanel3.SuspendLayout();
             groupBox1.SuspendLayout();
             flowLayoutPanel7.SuspendLayout();
@@ -291,7 +291,7 @@
             tableLayoutPanel4.ColumnCount = 2;
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.Controls.Add(numericUpDown1, 1, 1);
+            tableLayoutPanel4.Controls.Add(PoliFokSzam_num, 1, 1);
             tableLayoutPanel4.Controls.Add(label10, 0, 1);
             tableLayoutPanel4.Controls.Add(radioButton1, 0, 0);
             tableLayoutPanel4.Controls.Add(radioButton2, 1, 0);
@@ -304,12 +304,15 @@
             tableLayoutPanel4.Size = new Size(313, 63);
             tableLayoutPanel4.TabIndex = 4;
             // 
-            // numericUpDown1
+            // PoliFokSzam_num
             // 
-            numericUpDown1.Location = new Point(159, 34);
-            numericUpDown1.Name = "numericUpDown1";
-            numericUpDown1.Size = new Size(120, 23);
-            numericUpDown1.TabIndex = 4;
+            PoliFokSzam_num.Enabled = false;
+            PoliFokSzam_num.Location = new Point(159, 34);
+            PoliFokSzam_num.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            PoliFokSzam_num.Name = "PoliFokSzam_num";
+            PoliFokSzam_num.Size = new Size(120, 23);
+            PoliFokSzam_num.TabIndex = 4;
+            PoliFokSzam_num.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // label10
             // 
@@ -323,6 +326,7 @@
             // radioButton1
             // 
             radioButton1.AutoSize = true;
+            radioButton1.Checked = true;
             radioButton1.Location = new Point(3, 3);
             radioButton1.Name = "radioButton1";
             radioButton1.Size = new Size(123, 19);
@@ -334,11 +338,11 @@
             // radioButton2
             // 
             radioButton2.AutoSize = true;
+            radioButton2.Enabled = false;
             radioButton2.Location = new Point(159, 3);
             radioButton2.Name = "radioButton2";
             radioButton2.Size = new Size(148, 19);
             radioButton2.TabIndex = 1;
-            radioButton2.TabStop = true;
             radioButton2.Text = "Polinomiális Regresszió";
             radioButton2.UseVisualStyleBackColor = true;
             // 
@@ -390,6 +394,7 @@
             // Enable3D
             // 
             Enable3D.AutoSize = true;
+            Enable3D.Enabled = false;
             Enable3D.Location = new Point(510, 3);
             Enable3D.Name = "Enable3D";
             Enable3D.Size = new Size(119, 19);
@@ -430,16 +435,6 @@
             Scatter_points.UseVisualStyleBackColor = true;
             Scatter_points.Click += Scatter_points_Click;
             // 
-            // button1
-            // 
-            button1.Location = new Point(279, 3);
-            button1.Name = "button1";
-            button1.Size = new Size(102, 23);
-            button1.TabIndex = 4;
-            button1.Text = "Old meg X és Y";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
             // button2
             // 
             button2.Location = new Point(139, 3);
@@ -449,6 +444,16 @@
             button2.Text = "Minden pont törlése";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(279, 3);
+            button1.Name = "button1";
+            button1.Size = new Size(102, 23);
+            button1.TabIndex = 4;
+            button1.Text = "Old meg X és Y";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // panel1
             // 
@@ -692,7 +697,7 @@
             panel2.ResumeLayout(false);
             tableLayoutPanel4.ResumeLayout(false);
             tableLayoutPanel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)PoliFokSzam_num).EndInit();
             flowLayoutPanel3.ResumeLayout(false);
             flowLayoutPanel3.PerformLayout();
             groupBox1.ResumeLayout(false);
@@ -770,7 +775,7 @@
         private RadioButton radioButton1;
         private RadioButton radioButton2;
         private Label label10;
-        private NumericUpDown numericUpDown1;
+        private NumericUpDown PoliFokSzam_num;
         private Panel panel2;
         private TableLayoutPanel tableLayoutPanel4;
     }
